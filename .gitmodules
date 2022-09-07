@@ -1,3 +1,0 @@
-[submodule "tests/chains/corda/yui-corda-ibc"]
-	path = tests/chains/corda/yui-corda-ibc
-	url = https://github.com/hyperledger-labs/yui-corda-ibc.git
