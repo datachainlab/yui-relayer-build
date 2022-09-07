@@ -6,9 +6,10 @@ import (
 
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	"github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
-	"github.com/hyperledger-labs/yui-relayer/tests/tendermint/simapp"
-	"github.com/hyperledger-labs/yui-relayer/tests/tendermint/simapp/simd/cmd"
 	"github.com/stretchr/testify/require"
+
+	"github.com/hyperledger-labs/yui-relayer/tests/chains/tendermint/simapp"
+	"github.com/hyperledger-labs/yui-relayer/tests/chains/tendermint/simapp/simd/cmd"
 )
 
 func TestInitCmd(t *testing.T) {
