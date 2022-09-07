@@ -7,7 +7,7 @@ require (
 	github.com/cosmos/ibc-go v1.0.0-beta1
 	github.com/datachainlab/ibc-mock-client v0.1.1
 	github.com/gorilla/mux v1.8.0
-	github.com/hyperledger-labs/yui-fabric-ibc v0.2.2-rc3
+	github.com/hyperledger-labs/yui-fabric-ibc v0.2.2
 	github.com/rakyll/statik v0.1.7
 	github.com/spf13/cast v1.3.1
 	github.com/spf13/cobra v1.1.3
