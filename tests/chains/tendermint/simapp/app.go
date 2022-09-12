@@ -81,7 +81,7 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	transfer "github.com/cosmos/ibc-go/modules/apps/transfer"
+	"github.com/cosmos/ibc-go/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/modules/core"
@@ -93,8 +93,8 @@ import (
 	ibctypes "github.com/cosmos/ibc-go/modules/core/types"
 	ibcmock "github.com/cosmos/ibc-go/testing/mock"
 
-	fabric "github.com/hyperledger-labs/yui-fabric-ibc/light-client"
-	fabrictypes "github.com/hyperledger-labs/yui-fabric-ibc/light-client/types"
+	"github.com/hyperledger-labs/yui-fabric-ibc/light-clients/fabric"
+	fabrictypes "github.com/hyperledger-labs/yui-fabric-ibc/light-clients/fabric/types"
 
 	mockclient "github.com/datachainlab/ibc-mock-client/modules/light-clients/xx-mock"
 	mockclienttypes "github.com/datachainlab/ibc-mock-client/modules/light-clients/xx-mock/types"

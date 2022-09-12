@@ -3,10 +3,10 @@ module github.com/datachainlab/yui-relayer-build
 go 1.18
 
 require (
-	github.com/hyperledger-labs/yui-corda-ibc v0.1.0-rc3
-	github.com/hyperledger-labs/yui-fabric-ibc v0.2.2-rc4
-	github.com/hyperledger-labs/yui-ibc-solidity v0.1.1
-	github.com/hyperledger-labs/yui-relayer v0.2.0-rc3
+	github.com/hyperledger-labs/yui-corda-ibc v0.1.0
+	github.com/hyperledger-labs/yui-fabric-ibc v0.2.2
+	github.com/hyperledger-labs/yui-ibc-solidity v0.1.2
+	github.com/hyperledger-labs/yui-relayer v0.2.0
 )
 
 require (
