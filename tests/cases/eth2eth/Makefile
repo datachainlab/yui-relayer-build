@@ -1,5 +1,3 @@
-TRUFFLE ?= npx truffle
-TEST_OPTS ?= --compile-none --migrate-none
 include ../../docker.mk
 
 .PHONY: network
@@ -12,6 +10,7 @@ network:
 .PHONY: test
 test:
 	./scripts/init-rly
+	go test -v ./tests/... -count=1
 
 .PHONY: network-down
 network-down:

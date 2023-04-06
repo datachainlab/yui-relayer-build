@@ -3,8 +3,10 @@ module github.com/datachainlab/yui-relayer-build
 go 1.20
 
 require (
+	github.com/cosmos/ibc-go/v4 v4.0.0
 	github.com/hyperledger-labs/yui-ibc-solidity v0.3.1
 	github.com/hyperledger-labs/yui-relayer v0.3.2
+	github.com/stretchr/testify v1.8.0
 )
 
 require (
@@ -30,11 +32,11 @@ require (
 	github.com/cosmos/cosmos-sdk v0.45.7 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/iavl v0.19.0 // indirect
-	github.com/cosmos/ibc-go/v4 v4.0.0 // indirect
 	github.com/cosmos/ledger-cosmos-go v0.11.1 // indirect
 	github.com/cosmos/ledger-go v0.9.2 // indirect
 	github.com/danieljoos/wincred v1.0.2 // indirect
 	github.com/datachainlab/ibc-mock-client v0.2.1 // indirect
+	github.com/datachainlab/solidity-protobuf/protobuf-solidity/src/protoc/go v0.0.0-20211215073805-59460caf6e59 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deckarep/golang-set v1.7.1 // indirect
 	github.com/dgraph-io/badger/v2 v2.2007.2 // indirect
@@ -111,7 +113,6 @@ require (
 	github.com/status-im/keycard-go v0.0.0-20190316090335-8537d3370df4 // indirect
 	github.com/steakknife/bloomfilter v0.0.0-20180922174646-6819c0d2a570 // indirect
 	github.com/steakknife/hamming v0.0.0-20180906055917-c99c65617cd3 // indirect
-	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/subosito/gotenv v1.4.0 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20200815110645-5c35d600f0ca // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
