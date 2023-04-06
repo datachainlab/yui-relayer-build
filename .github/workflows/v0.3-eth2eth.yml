@@ -8,8 +8,8 @@ env:
   CACHE_DOCKER_ETHEREUM_DIR: /tmp/ethereum
 
 jobs:
-  tm2tm-test:
-    name: tm2tm-test
+  eth2eth-test:
+    name: eth2eth-test
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
