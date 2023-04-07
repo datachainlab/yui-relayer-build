@@ -16,7 +16,7 @@ jobs:
       - name: Wait for build to succeed
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ github.sha }}
           check-regexp: '(relayer|ethereum)-build'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 30
