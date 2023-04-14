@@ -1,11 +1,9 @@
 const IBCHandler = artifacts.require("OwnableIBCHandler");
-const IBFT2Client = artifacts.require("IBFT2Client");
 const MockClient = artifacts.require("MockClient");
 const ICS20TransferBank = artifacts.require("ICS20TransferBank");
 const ICS20Bank = artifacts.require("ICS20Bank");
 
 const PortTransfer = "transfer"
-const BesuIBFT2ClientType = "hyperledger-besu-ibft2"
 const MockClientType = "mock-client"
 
 module.exports = async function (deployer) {
@@ -14,7 +12,6 @@ module.exports = async function (deployer) {
 
   for(const promise of [
     () => ibcHandler.bindPort(PortTransfer, ICS20TransferBank.address),
-    () => ibcHandler.registerClient(BesuIBFT2ClientType, IBFT2Client.address),
     () => ibcHandler.registerClient(MockClientType, MockClient.address),
     () => ics20Bank.setOperator(ICS20TransferBank.address),
   ]) {
