@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -eu
+
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+source ${SCRIPT_DIR}/util/relayer-util
+
+echo "!!! ibc0 -> ibc1 !!!"
+
+# echo "Before ibc0 balance: $(${RLY} query balance ibc0 1)"
+# echo "Before ibc1 balance: $(${RLY} query balance ibc1 2)"
+
+# XXX set proper value
+TX_INTERNAL=3
+
+# cd ${SCRIPT_DIR}/../../../chains/ethereum/scripts/cmd && go run transfer.go 1 2 3
+sleep ${TX_INTERNAL}
+${RLY} tx relay ibc01
+sleep ${TX_INTERNAL}
+${RLY} tx acks ibc01
+sleep ${TX_INTERNAL}
+
+# echo "After ibc0 balance: $(${RLY} query balance ibc0 1)"
+# echo "After ibc1 balance: $(${RLY} query balance ibc1 2)"
