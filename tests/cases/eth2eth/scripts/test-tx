@@ -5,20 +5,33 @@ set -eu
 SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
 source ${SCRIPT_DIR}/util/relayer-util
 
+BALANCE_GO=${SCRIPT_DIR}/../../../chains/ethereum/scripts/cmd/balance/main.go
+TRANSFER_GO=${SCRIPT_DIR}/../../../chains/ethereum/scripts/cmd/transfer/main.go
+
+show_balance() {
+  state=$1
+  user_id=$2
+  user_name=$3
+  result=$(go run ${BALANCE_GO} ${user_id})
+  result1=$(echo $result | cut -d ',' -f 1)
+  result2=$(echo $result | cut -d ',' -f 2)
+  echo "${state} ibc0 balance of ${user_name}: $result1"
+  echo "${state} ibc1 balance of ${user_name}: $result2"
+}
+
+show_balance Before 1 alice
+show_balance Before 2 bob
+
 echo "!!! ibc0 -> ibc1 !!!"
 
-# echo "Before ibc0 balance: $(${RLY} query balance ibc0 1)"
-# echo "Before ibc1 balance: $(${RLY} query balance ibc1 2)"
-
-# XXX set proper value
 TX_INTERNAL=3
 
-# cd ${SCRIPT_DIR}/../../../chains/ethereum/scripts/cmd && go run transfer.go 1 2 3
+go run ${TRANSFER_GO} 1 2 5
 sleep ${TX_INTERNAL}
 ${RLY} tx relay ibc01
 sleep ${TX_INTERNAL}
 ${RLY} tx acks ibc01
 sleep ${TX_INTERNAL}
 
-# echo "After ibc0 balance: $(${RLY} query balance ibc0 1)"
-# echo "After ibc1 balance: $(${RLY} query balance ibc1 2)"
+show_balance After 1 alice
+show_balance After 2 bob

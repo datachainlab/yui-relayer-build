@@ -10,10 +10,6 @@ network:
 .PHONY: test
 test:
 	./scripts/init-rly
-#	go test -v ./tests/... -count=1
-
-.PHONY: test2
-test2:
 	./scripts/test-tx
 
 .PHONY: network-down
