@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/datachainlab/yui-relayer-build/tests/chains/ethereum/scripts/cmd/helper"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 )
 
@@ -56,7 +57,7 @@ func Transfer(pathFile string, fromIndex, toIndex uint32, amount int64) error {
 		deployer = 0
 	)
 	chanA := chainA.GetChannel()
-	_, err = chainA.SimpleToken.Approve(chainA.TxOpts(ctx, deployer), chainA.ContractConfig.GetICS20BankAddress(), big.NewInt(amount))
+	_, err = chainA.SimpleToken.Approve(chainA.TxOpts(ctx, deployer), common.HexToAddress(chainA.ChainConfig.Addresses.ICS20BankAddress), big.NewInt(amount))
 	if err != nil {
 		log.Println("token approve error: ", err)
 		os.Exit(1)
@@ -65,7 +66,7 @@ func Transfer(pathFile string, fromIndex, toIndex uint32, amount int64) error {
 
 	_, err = chainA.ICS20Bank.Deposit(
 		chainA.TxOpts(ctx, deployer),
-		chainA.ContractConfig.GetSimpleTokenAddress(),
+		common.HexToAddress(chainA.ChainConfig.Addresses.SimpleTokenAddress),
 		big.NewInt(amount),
 		chainA.CallOpts(ctx, fromIndex).From,
 	)
@@ -75,7 +76,7 @@ func Transfer(pathFile string, fromIndex, toIndex uint32, amount int64) error {
 	}
 	log.Println("2. deposit success")
 
-	baseDenom := strings.ToLower(chainA.ContractConfig.GetSimpleTokenAddress().String())
+	baseDenom := strings.ToLower(chainA.ChainConfig.Addresses.SimpleTokenAddress)
 	_, err = chainA.ICS20Transfer.SendTransfer(
 		chainA.TxOpts(ctx, fromIndex),
 		baseDenom,

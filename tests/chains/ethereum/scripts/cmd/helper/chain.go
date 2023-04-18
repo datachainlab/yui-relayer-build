@@ -25,6 +25,62 @@ import (
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/wallet"
 )
 
+type PathConfig struct {
+	Src      PathInfo `json:"src"`
+	Dst      PathInfo `json:"dst"`
+	Mnemonic string   `json:"mnemonic"`
+}
+
+type PathInfo struct {
+	ChainID      string `json:"chain-id"`
+	ClientID     string `json:"client-id"`
+	ConnectionID string `json:"connection-id"`
+	ChannelID    string `json:"channel-id"`
+	PortID       string `json:"port-id"`
+	Order        string `json:"order"`
+	Version      string `json:"version"`
+}
+
+type ChainConfig struct {
+	Chain     ChainInfo    `json:"chain"`
+	Prover    ProverConfig `json:"prover"`
+	Addresses struct {
+		SimpleTokenAddress       string `json:"simple_token_address"`
+		ICS20TransferBankAddress string `json:"ics20_transfer_bank_address"`
+		ICS20BankAddress         string `json:"ics20_bank_address"`
+	}
+}
+
+type ChainInfo struct {
+	Type        string `json:"@type"`
+	ChainID     string `json:"chain_id"`
+	EthChainID  int    `json:"eth_chain_id"`
+	RPCAddr     string `json:"rpc_addr"`
+	HDWMnemonic string `json:"hdw_mnemonic"`
+	HDWPath     string `json:"hdw_path"`
+	IBCAddress  string `json:"ibc_address"`
+}
+
+type ProverConfig struct {
+	Type string `json:"@type"`
+}
+
+type Connection struct {
+	ID                   string
+	ClientID             string
+	CounterpartyClientID string
+	NextChannelVersion   string
+	Channels             []Channel
+}
+
+type Channel struct {
+	PortID               string
+	ID                   string
+	ClientID             string
+	CounterpartyClientID string
+	Version              string
+}
+
 type Chain struct {
 	chainID        int64
 	client         *client.ETHClient
@@ -32,7 +88,7 @@ type Chain struct {
 	mnemonicPhrase string
 	keys           map[uint32]*ecdsa.PrivateKey
 
-	ContractConfig ContractConfig
+	ChainConfig ChainConfig
 
 	// Core Modules
 	IBCHandler    ibchandler.Ibchandler
@@ -55,28 +111,23 @@ type Chain struct {
 	Channel Channel
 }
 
-func NewChain(chainInfo ChainInfo, client *client.ETHClient, lc *LightClient, config ContractConfig, mnemonicPhrase string, ibcID uint64) *Chain {
-	ibcHandler, err := ibchandler.NewIbchandler(config.GetIBCHandlerAddress(), client)
+func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClient, lc *LightClient, mnemonicPhrase string, ibcID uint64) *Chain {
+	ibcHandler, err := ibchandler.NewIbchandler(common.HexToAddress(chainConfig.Chain.IBCAddress), client)
 	if err != nil {
 		log.Print(err)
 		return nil
 	}
-	ibcCommitment, err := ibccommitment.NewIbccommitmenttesthelper(config.GetIBCCommitmentTestHelperAddress(), client)
+	simpletoken, err := simpletoken.NewSimpletoken(common.HexToAddress(chainConfig.Addresses.SimpleTokenAddress), client)
 	if err != nil {
 		log.Print(err)
 		return nil
 	}
-	simpletoken, err := simpletoken.NewSimpletoken(config.GetSimpleTokenAddress(), client)
+	ics20transfer, err := ics20transferbank.NewIcs20transferbank(common.HexToAddress(chainConfig.Addresses.ICS20TransferBankAddress), client)
 	if err != nil {
 		log.Print(err)
 		return nil
 	}
-	ics20transfer, err := ics20transferbank.NewIcs20transferbank(config.GetICS20TransferBankAddress(), client)
-	if err != nil {
-		log.Print(err)
-		return nil
-	}
-	ics20bank, err := ics20bank.NewIcs20bank(config.GetICS20BankAddress(), client)
+	ics20bank, err := ics20bank.NewIcs20bank(common.HexToAddress(chainConfig.Addresses.ICS20BankAddress), client)
 	if err != nil {
 		log.Print(err)
 		return nil
@@ -84,25 +135,24 @@ func NewChain(chainInfo ChainInfo, client *client.ETHClient, lc *LightClient, co
 
 	return &Chain{
 		client:         client,
-		chainID:        int64(chainInfo.ETHChainID),
+		chainID:        int64(chainConfig.Chain.EthChainID),
 		lc:             lc,
-		ContractConfig: config,
+		ChainConfig:    chainConfig,
 		mnemonicPhrase: mnemonicPhrase,
 		keys:           make(map[uint32]*ecdsa.PrivateKey),
 		IBCID:          ibcID,
 
-		IBCHandler:    *ibcHandler,
-		IBCCommitment: *ibcCommitment,
+		IBCHandler: *ibcHandler,
 
 		SimpleToken:   *simpletoken,
 		ICS20Transfer: *ics20transfer,
 		ICS20Bank:     *ics20bank,
 		Channel: Channel{
-			PortID:               chainInfo.PortID,
-			ID:                   chainInfo.ChannelID,
-			ClientID:             chainInfo.ClientID,
-			CounterpartyClientID: chainInfo.ClientID,
-			Version:              chainInfo.Version,
+			PortID:               pathInfo.PortID,
+			ID:                   pathInfo.ChannelID,
+			ClientID:             pathInfo.ClientID,
+			CounterpartyClientID: pathInfo.ClientID,
+			Version:              pathInfo.Version,
 		},
 	}
 }
@@ -140,7 +190,7 @@ func (chain *Chain) UpdateHeader() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	for {
-		state, err := chain.lc.GetState(ctx, chain.ContractConfig.GetIBCHandlerAddress(), nil, nil)
+		state, err := chain.lc.GetState(ctx, common.HexToAddress(chain.ChainConfig.Chain.IBCAddress), nil, nil)
 		if err != nil {
 			panic(err)
 		}
@@ -178,81 +228,72 @@ func makeGenTxOpts(chainID *big.Int, prv *ecdsa.PrivateKey) func(ctx context.Con
 	}
 }
 
-type ContractConfig interface {
-	GetIBCHandlerAddress() common.Address
-	GetIBCCommitmentTestHelperAddress() common.Address
-
-	GetSimpleTokenAddress() common.Address
-	GetICS20TransferBankAddress() common.Address
-	GetICS20BankAddress() common.Address
-}
-
-type Connection struct {
-	ID                   string
-	ClientID             string
-	CounterpartyClientID string
-	NextChannelVersion   string
-	Channels             []Channel
-}
-
-type Channel struct {
-	PortID               string
-	ID                   string
-	ClientID             string
-	CounterpartyClientID string
-	Version              string
-}
-
-type ChainPath struct {
-	Src      ChainInfo `json:"src"`
-	Dst      ChainInfo `json:"dst"`
-	Mnemonic string    `json:"mnemonic"`
-}
-
-type ChainInfo struct {
-	ChainID      string `json:"chain-id"`
-	ClientID     string `json:"client-id"`
-	ConnectionID string `json:"connection-id"`
-	ChannelID    string `json:"channel-id"`
-	PortID       string `json:"port-id"`
-	Order        string `json:"order"`
-	Version      string `json:"version"`
-	ClientURL    string `json:"client-url"`
-	ETHChainID   int    `json:"eth-chain-id"`
-}
-
-func InitializeChains(pathFile string) (*Chain, *Chain, error) {
-	chainPath, err := parsePathFile(pathFile)
+func InitializeChains(configDir string) (*Chain, *Chain, error) {
+	pathConfig, err := parsePathConfig(configDir)
 	if err != nil {
 		return nil, nil, err
 	}
-	src := chainPath.Src
-	dst := chainPath.Dst
-
-	ethClientA, err := client.NewETHClient(src.ClientURL)
+	chainConfigs, err := parseChainConfigs(configDir + "/chains")
 	if err != nil {
 		return nil, nil, err
 	}
-	ethClientB, err := client.NewETHClient(dst.ClientURL)
+	src := chainConfigs[0]
+	dst := chainConfigs[1]
+	ethClientA, err := client.NewETHClient(src.Chain.RPCAddr)
 	if err != nil {
 		return nil, nil, err
 	}
-	chainA := NewChain(src, ethClientA, NewLightClient(ethClientA, ibcclient.MockClient), Contract, chainPath.Mnemonic, uint64(time.Now().UnixNano()))
-	chainB := NewChain(dst, ethClientB, NewLightClient(ethClientB, ibcclient.MockClient), Contract, chainPath.Mnemonic, uint64(time.Now().UnixNano()))
+	ethClientB, err := client.NewETHClient(dst.Chain.RPCAddr)
+	if err != nil {
+		return nil, nil, err
+	}
+	chainA := NewChain(pathConfig.Src, *src, ethClientA, NewLightClient(ethClientA, ibcclient.MockClient), src.Chain.HDWMnemonic, uint64(time.Now().UnixNano()))
+	chainB := NewChain(pathConfig.Dst, *dst, ethClientB, NewLightClient(ethClientB, ibcclient.MockClient), dst.Chain.HDWMnemonic, uint64(time.Now().UnixNano()))
 
 	chainA.UpdateHeader()
 	chainB.UpdateHeader()
 	return chainA, chainB, nil
 }
 
-func parsePathFile(pathFile string) (*ChainPath, error) {
-	data, err := os.ReadFile(pathFile)
+func parsePathConfig(configDir string) (*PathConfig, error) {
+	files, err := os.ReadDir(configDir)
 	if err != nil {
 		return nil, err
 	}
-	var chainPath ChainPath
-	if err = json.Unmarshal(data, &chainPath); err != nil {
+	var pathConfig PathConfig
+	for _, f := range files {
+		pth := fmt.Sprintf("%s/%s", configDir, f.Name())
+		if f.IsDir() {
+			continue
+		}
+		byt, err := os.ReadFile(pth)
+		if err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal(byt, &pathConfig); err != nil {
+			return nil, err
+		}
+	}
+	return &pathConfig, nil
+}
+
+func parseChainConfigs(configDir string) ([]*ChainConfig, error) {
+	files, err := os.ReadDir(configDir)
+	if err != nil {
 		return nil, err
 	}
-	return &chainPath, nil
+	var chainConfigs []*ChainConfig
+	for _, f := range files {
+		var chainConfig ChainConfig
+		pth := fmt.Sprintf("%s/%s", configDir, f.Name())
+		byt, err := os.ReadFile(pth)
+		if err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal(byt, &chainConfig); err != nil {
+			return nil, err
+		}
+		chainConfigs = append(chainConfigs, &chainConfig)
+	}
+	return chainConfigs, nil
 }

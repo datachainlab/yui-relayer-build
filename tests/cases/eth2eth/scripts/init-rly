@@ -10,7 +10,7 @@ rm -rf ${RELAYER_CONF} &> /dev/null
 sleep 10
 
 ${RLY} config init
-${RLY} chains add-dir ${CONF_DIR}/relayer/demo/
+${RLY} chains add-dir ${CONF_DIR}/chains/
 
 # add a path between chain0 and chain1
-$RLY paths add $CHAINID_ONE $CHAINID_TWO $PATH_NAME --file=${CONF_DIR}/relayer/path.json
+$RLY paths add $CHAINID_ONE $CHAINID_TWO $PATH_NAME --file=${CONF_DIR}/path.json

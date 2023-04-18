@@ -47,7 +47,7 @@ func balanceOf(pathFile string, index int64) (*big.Int, *big.Int) {
 		os.Exit(1)
 	}
 	ctx := context.Background()
-	baseDenom := strings.ToLower(chainA.ContractConfig.GetSimpleTokenAddress().String())
+	baseDenom := strings.ToLower(chainA.ChainConfig.Addresses.SimpleTokenAddress)
 	bankA, err := chainA.ICS20Bank.BalanceOf(chainA.CallOpts(ctx, relayer), chainA.CallOpts(ctx, uint32(index)).From, baseDenom)
 	if err != nil {
 		log.Println("BalanceOf Error: ", err)

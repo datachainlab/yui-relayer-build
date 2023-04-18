@@ -10,5 +10,10 @@
   },
   "prover": {
     "@type": "/relayer.provers.mock.config.ProverConfig"
+  },
+  "addresses": {
+    "simple_token_address": "0xff77D90D6aA12db33d3Ba50A34fB25401f6e4c4F",
+    "ics20_transfer_bank_address": "0xaE1C9125BbcF63bf51294C4D15CBD472782E330D",
+    "ics20_bank_address": "0x2F5703804E29F4252FA9405B8D357220d11b3bd9"
   }
 }
