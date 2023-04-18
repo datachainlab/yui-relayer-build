@@ -8,7 +8,6 @@ ENV NETWORKID ${NETWORKID}
 
 WORKDIR /root
 
-ADD mnemonic  ./mnemonic
 ADD run.sh /run.sh
 
 EXPOSE 8545

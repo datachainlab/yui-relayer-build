@@ -10,6 +10,7 @@ network:
 .PHONY: test
 test:
 	./scripts/init-rly
+	./scripts/handshake
 	./scripts/test-tx
 
 .PHONY: network-down
