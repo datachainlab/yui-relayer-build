@@ -1,4 +1,3 @@
-const IBFT2Client = artifacts.require("IBFT2Client");
 const MockClient = artifacts.require("MockClient");
 const IBCClient = artifacts.require("IBCClient");
 const IBCConnection = artifacts.require("IBCConnection");
@@ -15,10 +14,7 @@ const deployCore = async (deployer) => {
   await deployer.deploy(IBCChannelHandshake);
   await deployer.deploy(IBCPacket);
   await deployer.deploy(IBCHandler, IBCClient.address, IBCConnection.address, IBCChannelHandshake.address, IBCPacket.address);
-
-  await deployer.deploy(IBFT2Client, IBCHandler.address);
   await deployer.deploy(MockClient, IBCHandler.address);
-
 };
 
 const deployApp = async (deployer) => {

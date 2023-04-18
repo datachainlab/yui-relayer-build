@@ -17,22 +17,23 @@ var rootCmd = &cobra.Command{
 	Short: "transfer command",
 	Long:  "transfer command fromIndex toIndex amount",
 	Run: func(cmd *cobra.Command, args []string) {
-		fromIndex, err := strconv.ParseInt(args[0], 10, 32)
+		pathFile := args[0]
+		fromIndex, err := strconv.ParseInt(args[1], 10, 32)
 		if err != nil {
 			log.Println(err)
 			os.Exit(1)
 		}
-		toIndex, err := strconv.ParseInt(args[1], 10, 32)
+		toIndex, err := strconv.ParseInt(args[2], 10, 32)
 		if err != nil {
 			log.Println(err)
 			os.Exit(1)
 		}
-		amount, err := strconv.ParseInt(args[2], 10, 64)
+		amount, err := strconv.ParseInt(args[3], 10, 64)
 		if err != nil {
 			log.Println(err)
 			os.Exit(1)
 		}
-		Transfer(uint32(fromIndex), uint32(toIndex), amount)
+		Transfer(pathFile, uint32(fromIndex), uint32(toIndex), amount)
 	},
 }
 
@@ -43,8 +44,8 @@ func main() {
 	}
 }
 
-func Transfer(fromIndex, toIndex uint32, amount int64) error {
-	chainA, chainB, err := helper.InitializeChains()
+func Transfer(pathFile string, fromIndex, toIndex uint32, amount int64) error {
+	chainA, chainB, err := helper.InitializeChains(pathFile)
 	if err != nil {
 		log.Println("InitializeChains Error: ", err)
 		os.Exit(1)
@@ -54,7 +55,7 @@ func Transfer(fromIndex, toIndex uint32, amount int64) error {
 		relayer  = 0
 		deployer = 0
 	)
-	chanA := helper.CreateChannel()
+	chanA := chainA.GetChannel()
 	_, err = chainA.SimpleToken.Approve(chainA.TxOpts(ctx, deployer), chainA.ContractConfig.GetICS20BankAddress(), big.NewInt(amount))
 	if err != nil {
 		log.Println("token approve error: ", err)

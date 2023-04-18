@@ -3,10 +3,12 @@ package helper
 import (
 	"context"
 	"crypto/ecdsa"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"math/big"
+	"os"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -14,7 +16,6 @@ import (
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	gethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/client"
-	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/consts"
 	ibccommitment "github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/ibccommitmenttesthelper"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/ibchandler"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/ics20bank"
@@ -23,8 +24,6 @@ import (
 	ibcclient "github.com/hyperledger-labs/yui-ibc-solidity/pkg/ibc/core/client"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/wallet"
 )
-
-const MnemonicPhrase = "math razor capable expose worth grape metal sunset metal sudden usage scheme"
 
 type Chain struct {
 	chainID        int64
@@ -51,9 +50,12 @@ type Chain struct {
 	ClientIDs   []string      // ClientID's used on this chain
 	Connections []*Connection // track connectionID's created for this chain
 	IBCID       uint64
+
+	// Channel specific helpers
+	Channel Channel
 }
 
-func NewChain(chainID int64, client *client.ETHClient, lc *LightClient, config ContractConfig, mnemonicPhrase string, ibcID uint64) *Chain {
+func NewChain(chainInfo ChainInfo, client *client.ETHClient, lc *LightClient, config ContractConfig, mnemonicPhrase string, ibcID uint64) *Chain {
 	ibcHandler, err := ibchandler.NewIbchandler(config.GetIBCHandlerAddress(), client)
 	if err != nil {
 		log.Print(err)
@@ -82,7 +84,7 @@ func NewChain(chainID int64, client *client.ETHClient, lc *LightClient, config C
 
 	return &Chain{
 		client:         client,
-		chainID:        chainID,
+		chainID:        int64(chainInfo.ETHChainID),
 		lc:             lc,
 		ContractConfig: config,
 		mnemonicPhrase: mnemonicPhrase,
@@ -95,6 +97,13 @@ func NewChain(chainID int64, client *client.ETHClient, lc *LightClient, config C
 		SimpleToken:   *simpletoken,
 		ICS20Transfer: *ics20transfer,
 		ICS20Bank:     *ics20bank,
+		Channel: Channel{
+			PortID:               chainInfo.PortID,
+			ID:                   chainInfo.ChannelID,
+			ClientID:             chainInfo.ClientID,
+			CounterpartyClientID: chainInfo.ClientID,
+			Version:              chainInfo.Version,
+		},
 	}
 }
 
@@ -144,6 +153,10 @@ func (chain *Chain) UpdateHeader() {
 	}
 }
 
+func (chain *Chain) GetChannel() Channel {
+	return chain.Channel
+}
+
 func makeGenTxOpts(chainID *big.Int, prv *ecdsa.PrivateKey) func(ctx context.Context) *bind.TransactOpts {
 	signer := gethtypes.LatestSignerForChainID(chainID)
 	addr := gethcrypto.PubkeyToAddress(prv.PublicKey)
@@ -190,31 +203,56 @@ type Channel struct {
 	Version              string
 }
 
-func CreateChannel() Channel {
-	return Channel{
-		PortID:               "transfer",
-		ID:                   "channel-0",
-		ClientID:             "mock-client-0",
-		CounterpartyClientID: "mock-client-0",
-		Version:              "transfer-1",
-	}
+type ChainPath struct {
+	Src      ChainInfo `json:"src"`
+	Dst      ChainInfo `json:"dst"`
+	Mnemonic string    `json:"mnemonic"`
 }
 
-func InitializeChains() (*Chain, *Chain, error) {
-	ethClientA, err := client.NewETHClient("http://127.0.0.1:8645")
+type ChainInfo struct {
+	ChainID      string `json:"chain-id"`
+	ClientID     string `json:"client-id"`
+	ConnectionID string `json:"connection-id"`
+	ChannelID    string `json:"channel-id"`
+	PortID       string `json:"port-id"`
+	Order        string `json:"order"`
+	Version      string `json:"version"`
+	ClientURL    string `json:"client-url"`
+	ETHChainID   int    `json:"eth-chain-id"`
+}
+
+func InitializeChains(pathFile string) (*Chain, *Chain, error) {
+	chainPath, err := parsePathFile(pathFile)
 	if err != nil {
 		return nil, nil, err
 	}
+	src := chainPath.Src
+	dst := chainPath.Dst
 
-	ethClientB, err := client.NewETHClient("http://127.0.0.1:8745")
+	ethClientA, err := client.NewETHClient(src.ClientURL)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	chainA := NewChain(2018, ethClientA, NewLightClient(ethClientA, ibcclient.MockClient), consts.Contract, MnemonicPhrase, uint64(time.Now().UnixNano()))
-	chainB := NewChain(2019, ethClientB, NewLightClient(ethClientB, ibcclient.MockClient), consts.Contract, MnemonicPhrase, uint64(time.Now().UnixNano()))
+	ethClientB, err := client.NewETHClient(dst.ClientURL)
+	if err != nil {
+		return nil, nil, err
+	}
+	chainA := NewChain(src, ethClientA, NewLightClient(ethClientA, ibcclient.MockClient), Contract, chainPath.Mnemonic, uint64(time.Now().UnixNano()))
+	chainB := NewChain(dst, ethClientB, NewLightClient(ethClientB, ibcclient.MockClient), Contract, chainPath.Mnemonic, uint64(time.Now().UnixNano()))
 
 	chainA.UpdateHeader()
 	chainB.UpdateHeader()
 	return chainA, chainB, nil
+}
+
+func parsePathFile(pathFile string) (*ChainPath, error) {
+	data, err := os.ReadFile(pathFile)
+	if err != nil {
+		return nil, err
+	}
+	var chainPath ChainPath
+	if err = json.Unmarshal(data, &chainPath); err != nil {
+		return nil, err
+	}
+	return &chainPath, nil
 }

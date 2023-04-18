@@ -22,12 +22,13 @@ var rootCmd = &cobra.Command{
 	Short: "wallet command",
 	Long:  "wallet command walletIndex",
 	Run: func(cmd *cobra.Command, args []string) {
-		walletIndex, err := strconv.ParseInt(args[0], 10, 64)
+		pathFile := args[0]
+		walletIndex, err := strconv.ParseInt(args[1], 10, 64)
 		if err != nil {
 			log.Println(err)
 			os.Exit(1)
 		}
-		balanceA, balanceB := balanceOf(walletIndex)
+		balanceA, balanceB := balanceOf(pathFile, walletIndex)
 		fmt.Printf("%d,%d\n", balanceA, balanceB)
 	},
 }
@@ -39,8 +40,8 @@ func main() {
 	}
 }
 
-func balanceOf(index int64) (*big.Int, *big.Int) {
-	chainA, chainB, err := helper.InitializeChains()
+func balanceOf(pathFile string, index int64) (*big.Int, *big.Int) {
+	chainA, chainB, err := helper.InitializeChains(pathFile)
 	if err != nil {
 		log.Println("InitializeChains Error: ", err)
 		os.Exit(1)
@@ -52,7 +53,7 @@ func balanceOf(index int64) (*big.Int, *big.Int) {
 		log.Println("BalanceOf Error: ", err)
 		os.Exit(1)
 	}
-	chanB := helper.CreateChannel()
+	chanB := chainB.GetChannel()
 	expectedDenom := fmt.Sprintf("%v/%v/%v", chanB.PortID, chanB.ID, baseDenom)
 	bankB, err := chainB.ICS20Bank.BalanceOf(chainB.CallOpts(ctx, relayer), chainB.CallOpts(ctx, uint32(index)).From, expectedDenom)
 	if err != nil {

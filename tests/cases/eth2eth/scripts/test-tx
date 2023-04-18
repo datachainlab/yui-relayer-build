@@ -7,12 +7,13 @@ source ${SCRIPT_DIR}/util/relayer-util
 
 BALANCE_GO=${SCRIPT_DIR}/../../../chains/ethereum/scripts/cmd/balance/main.go
 TRANSFER_GO=${SCRIPT_DIR}/../../../chains/ethereum/scripts/cmd/transfer/main.go
+PATH_FILE=${CONF_DIR}/relayer/path.json
 
 show_balance() {
   state=$1
   user_id=$2
   user_name=$3
-  result=$(go run ${BALANCE_GO} ${user_id})
+  result=$(go run ${BALANCE_GO} ${PATH_FILE} ${user_id})
   result1=$(echo $result | cut -d ',' -f 1)
   result2=$(echo $result | cut -d ',' -f 2)
   echo "${state} ibc0 balance of ${user_name}: $result1"
@@ -26,7 +27,7 @@ echo "!!! ibc0 -> ibc1 !!!"
 
 TX_INTERNAL=3
 
-go run ${TRANSFER_GO} 1 2 5
+go run ${TRANSFER_GO} ${PATH_FILE} 1 2 5
 sleep ${TX_INTERNAL}
 ${RLY} tx relay ibc01
 sleep ${TX_INTERNAL}
