@@ -22,13 +22,13 @@ var rootCmd = &cobra.Command{
 	Short: "wallet command",
 	Long:  "wallet command walletIndex",
 	Run: func(cmd *cobra.Command, args []string) {
-		pathFile := args[0]
+		configDir := args[0]
 		walletIndex, err := strconv.ParseInt(args[1], 10, 64)
 		if err != nil {
 			log.Println(err)
 			os.Exit(1)
 		}
-		balanceA, balanceB := balanceOf(pathFile, walletIndex)
+		balanceA, balanceB := balanceOf(configDir, walletIndex)
 		fmt.Printf("%d,%d\n", balanceA, balanceB)
 	},
 }
@@ -40,8 +40,8 @@ func main() {
 	}
 }
 
-func balanceOf(pathFile string, index int64) (*big.Int, *big.Int) {
-	chainA, chainB, err := helper.InitializeChains(pathFile)
+func balanceOf(configDir string, index int64) (*big.Int, *big.Int) {
+	chainA, chainB, err := helper.InitializeChains(configDir)
 	if err != nil {
 		log.Println("InitializeChains Error: ", err)
 		os.Exit(1)

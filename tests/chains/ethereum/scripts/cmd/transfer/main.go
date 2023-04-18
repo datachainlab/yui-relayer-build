@@ -18,7 +18,7 @@ var rootCmd = &cobra.Command{
 	Short: "transfer command",
 	Long:  "transfer command fromIndex toIndex amount",
 	Run: func(cmd *cobra.Command, args []string) {
-		pathFile := args[0]
+		configDir := args[0]
 		fromIndex, err := strconv.ParseInt(args[1], 10, 32)
 		if err != nil {
 			log.Println(err)
@@ -34,7 +34,7 @@ var rootCmd = &cobra.Command{
 			log.Println(err)
 			os.Exit(1)
 		}
-		Transfer(pathFile, uint32(fromIndex), uint32(toIndex), amount)
+		Transfer(configDir, uint32(fromIndex), uint32(toIndex), amount)
 	},
 }
 
@@ -45,8 +45,8 @@ func main() {
 	}
 }
 
-func Transfer(pathFile string, fromIndex, toIndex uint32, amount int64) error {
-	chainA, chainB, err := helper.InitializeChains(pathFile)
+func Transfer(configDir string, fromIndex, toIndex uint32, amount int64) error {
+	chainA, chainB, err := helper.InitializeChains(configDir)
 	if err != nil {
 		log.Println("InitializeChains Error: ", err)
 		os.Exit(1)
