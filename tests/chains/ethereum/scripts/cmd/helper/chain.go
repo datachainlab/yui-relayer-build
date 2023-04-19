@@ -42,13 +42,8 @@ type PathInfo struct {
 }
 
 type ChainConfig struct {
-	Chain     ChainInfo    `json:"chain"`
-	Prover    ProverConfig `json:"prover"`
-	Addresses struct {
-		SimpleTokenAddress       string `json:"simple_token_address"`
-		ICS20TransferBankAddress string `json:"ics20_transfer_bank_address"`
-		ICS20BankAddress         string `json:"ics20_bank_address"`
-	}
+	Chain  ChainInfo    `json:"chain"`
+	Prover ProverConfig `json:"prover"`
 }
 
 type ChainInfo struct {
@@ -111,23 +106,23 @@ type Chain struct {
 	Channel Channel
 }
 
-func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClient, lc *LightClient, mnemonicPhrase string, ibcID uint64) *Chain {
+func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClient, lc *LightClient, mnemonicPhrase string, ibcID uint64, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) *Chain {
 	ibcHandler, err := ibchandler.NewIbchandler(common.HexToAddress(chainConfig.Chain.IBCAddress), client)
 	if err != nil {
 		log.Print(err)
 		return nil
 	}
-	simpletoken, err := simpletoken.NewSimpletoken(common.HexToAddress(chainConfig.Addresses.SimpleTokenAddress), client)
+	simpletoken, err := simpletoken.NewSimpletoken(common.HexToAddress(simpleTokenAddress), client)
 	if err != nil {
 		log.Print(err)
 		return nil
 	}
-	ics20transfer, err := ics20transferbank.NewIcs20transferbank(common.HexToAddress(chainConfig.Addresses.ICS20TransferBankAddress), client)
+	ics20transfer, err := ics20transferbank.NewIcs20transferbank(common.HexToAddress(ics20TransferBankAddress), client)
 	if err != nil {
 		log.Print(err)
 		return nil
 	}
-	ics20bank, err := ics20bank.NewIcs20bank(common.HexToAddress(chainConfig.Addresses.ICS20BankAddress), client)
+	ics20bank, err := ics20bank.NewIcs20bank(common.HexToAddress(ics20BankAddress), client)
 	if err != nil {
 		log.Print(err)
 		return nil
@@ -228,7 +223,7 @@ func makeGenTxOpts(chainID *big.Int, prv *ecdsa.PrivateKey) func(ctx context.Con
 	}
 }
 
-func InitializeChains(configDir string) (*Chain, *Chain, error) {
+func InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) (*Chain, *Chain, error) {
 	pathConfig, err := parsePathConfig(configDir)
 	if err != nil {
 		return nil, nil, err
@@ -247,8 +242,8 @@ func InitializeChains(configDir string) (*Chain, *Chain, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	chainA := NewChain(pathConfig.Src, *src, ethClientA, NewLightClient(ethClientA, ibcclient.MockClient), src.Chain.HDWMnemonic, uint64(time.Now().UnixNano()))
-	chainB := NewChain(pathConfig.Dst, *dst, ethClientB, NewLightClient(ethClientB, ibcclient.MockClient), dst.Chain.HDWMnemonic, uint64(time.Now().UnixNano()))
+	chainA := NewChain(pathConfig.Src, *src, ethClientA, NewLightClient(ethClientA, ibcclient.MockClient), src.Chain.HDWMnemonic, uint64(time.Now().UnixNano()), simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+	chainB := NewChain(pathConfig.Dst, *dst, ethClientB, NewLightClient(ethClientB, ibcclient.MockClient), dst.Chain.HDWMnemonic, uint64(time.Now().UnixNano()), simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
 
 	chainA.UpdateHeader()
 	chainB.UpdateHeader()

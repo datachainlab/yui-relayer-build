@@ -34,7 +34,10 @@ var rootCmd = &cobra.Command{
 			log.Println(err)
 			os.Exit(1)
 		}
-		Transfer(configDir, uint32(fromIndex), uint32(toIndex), amount)
+		simpleTokenAddress := args[4]
+		ics20TransferBankAddress := args[5]
+		ics20BankAddress := args[6]
+		Transfer(configDir, uint32(fromIndex), uint32(toIndex), amount, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
 	},
 }
 
@@ -45,8 +48,8 @@ func main() {
 	}
 }
 
-func Transfer(configDir string, fromIndex, toIndex uint32, amount int64) error {
-	chainA, chainB, err := helper.InitializeChains(configDir)
+func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) error {
+	chainA, chainB, err := helper.InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
 	if err != nil {
 		log.Println("InitializeChains Error: ", err)
 		os.Exit(1)
@@ -57,7 +60,7 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64) error {
 		deployer = 0
 	)
 	chanA := chainA.GetChannel()
-	_, err = chainA.SimpleToken.Approve(chainA.TxOpts(ctx, deployer), common.HexToAddress(chainA.ChainConfig.Addresses.ICS20BankAddress), big.NewInt(amount))
+	_, err = chainA.SimpleToken.Approve(chainA.TxOpts(ctx, deployer), common.HexToAddress(ics20BankAddress), big.NewInt(amount))
 	if err != nil {
 		log.Println("token approve error: ", err)
 		os.Exit(1)
@@ -66,7 +69,7 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64) error {
 
 	_, err = chainA.ICS20Bank.Deposit(
 		chainA.TxOpts(ctx, deployer),
-		common.HexToAddress(chainA.ChainConfig.Addresses.SimpleTokenAddress),
+		common.HexToAddress(simpleTokenAddress),
 		big.NewInt(amount),
 		chainA.CallOpts(ctx, fromIndex).From,
 	)
@@ -76,7 +79,7 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64) error {
 	}
 	log.Println("2. deposit success")
 
-	baseDenom := strings.ToLower(chainA.ChainConfig.Addresses.SimpleTokenAddress)
+	baseDenom := strings.ToLower(simpleTokenAddress)
 	_, err = chainA.ICS20Transfer.SendTransfer(
 		chainA.TxOpts(ctx, fromIndex),
 		baseDenom,
