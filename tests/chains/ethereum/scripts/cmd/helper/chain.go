@@ -9,7 +9,6 @@ import (
 	"log"
 	"math/big"
 	"os"
-	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -21,7 +20,6 @@ import (
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/ics20bank"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/ics20transferbank"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/simpletoken"
-	ibcclient "github.com/hyperledger-labs/yui-ibc-solidity/pkg/ibc/core/client"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/wallet"
 )
 
@@ -79,7 +77,6 @@ type Channel struct {
 type Chain struct {
 	chainID        int64
 	client         *client.ETHClient
-	lc             *LightClient
 	mnemonicPhrase string
 	keys           map[uint32]*ecdsa.PrivateKey
 
@@ -94,19 +91,15 @@ type Chain struct {
 	ICS20Transfer ics20transferbank.Ics20transferbank
 	ICS20Bank     ics20bank.Ics20bank
 
-	// State
-	LastLCState LightClientState
-
 	// IBC specific helpers
 	ClientIDs   []string      // ClientID's used on this chain
 	Connections []*Connection // track connectionID's created for this chain
-	IBCID       uint64
 
 	// Channel specific helpers
 	Channel Channel
 }
 
-func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClient, lc *LightClient, mnemonicPhrase string, ibcID uint64, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) *Chain {
+func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClient, mnemonicPhrase string, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) *Chain {
 	ibcHandler, err := ibchandler.NewIbchandler(common.HexToAddress(chainConfig.Chain.IBCAddress), client)
 	if err != nil {
 		log.Print(err)
@@ -131,11 +124,9 @@ func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClie
 	return &Chain{
 		client:         client,
 		chainID:        int64(chainConfig.Chain.EthChainID),
-		lc:             lc,
 		ChainConfig:    chainConfig,
 		mnemonicPhrase: mnemonicPhrase,
 		keys:           make(map[uint32]*ecdsa.PrivateKey),
-		IBCID:          ibcID,
 
 		IBCHandler: *ibcHandler,
 
@@ -177,25 +168,8 @@ func (chain *Chain) CallOpts(ctx context.Context, index uint32) *bind.CallOpts {
 	}
 }
 
-func (chain *Chain) LastHeader() *gethtypes.Header {
-	return chain.LastLCState.Header()
-}
-
-func (chain *Chain) UpdateHeader() {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-	for {
-		state, err := chain.lc.GetState(ctx, common.HexToAddress(chain.ChainConfig.Chain.IBCAddress), nil, nil)
-		if err != nil {
-			panic(err)
-		}
-		if chain.LastLCState == nil || state.Header().Number.Cmp(chain.LastHeader().Number) == 1 {
-			chain.LastLCState = state
-			return
-		} else {
-			continue
-		}
-	}
+func (chain *Chain) LastHeader(ctx context.Context) (*gethtypes.Header, error) {
+	return chain.client.HeaderByNumber(ctx, nil)
 }
 
 func (chain *Chain) GetChannel() Channel {
@@ -242,11 +216,9 @@ func InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, i
 	if err != nil {
 		return nil, nil, err
 	}
-	chainA := NewChain(pathConfig.Src, *src, ethClientA, NewLightClient(ethClientA, ibcclient.MockClient), src.Chain.HDWMnemonic, uint64(time.Now().UnixNano()), simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
-	chainB := NewChain(pathConfig.Dst, *dst, ethClientB, NewLightClient(ethClientB, ibcclient.MockClient), dst.Chain.HDWMnemonic, uint64(time.Now().UnixNano()), simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+	chainA := NewChain(pathConfig.Src, *src, ethClientA, src.Chain.HDWMnemonic, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+	chainB := NewChain(pathConfig.Dst, *dst, ethClientB, dst.Chain.HDWMnemonic, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
 
-	chainA.UpdateHeader()
-	chainB.UpdateHeader()
 	return chainA, chainB, nil
 }
 

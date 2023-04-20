@@ -75,6 +75,12 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleT
 	}
 	log.Println("2. deposit success")
 
+	var heightB uint64
+	if header, err := chainB.LastHeader(ctx); err != nil {
+		log.Fatalf("failed to the latest header of chain B: %v", err)
+	} else {
+		heightB = header.Number.Uint64()
+	}
 	baseDenom := strings.ToLower(simpleTokenAddress)
 	_, err = chainA.ICS20Transfer.SendTransfer(
 		chainA.TxOpts(ctx, fromIndex),
@@ -82,7 +88,7 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleT
 		uint64(amount),
 		chainB.CallOpts(ctx, toIndex).From,
 		chanA.PortID, chanA.ID,
-		uint64(chainB.LastHeader().Number.Int64())+1000,
+		heightB + 1000,
 	)
 	if err != nil {
 		return err
