@@ -25,11 +25,6 @@ import (
 	"github.com/hyperledger-labs/yui-relayer/core"
 )
 
-type PathConfig struct {
-	Src core.PathEnd `json:"src"`
-	Dst core.PathEnd `json:"dst"`
-}
-
 type ChainConfig struct {
 	Chain  ethereum.ChainConfig `json:"chain"`
 	Prover ProverConfig         `json:"prover"`
@@ -60,7 +55,7 @@ type Chain struct {
 	PathEnd core.PathEnd
 }
 
-func NewChain(pathEnd core.PathEnd, chainConfig ChainConfig, client *client.ETHClient, mnemonicPhrase string, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) *Chain {
+func NewChain(pathEnd *core.PathEnd, chainConfig ChainConfig, client *client.ETHClient, mnemonicPhrase string, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) *Chain {
 	ibcHandler, err := ibchandler.NewIbchandler(chainConfig.Chain.IBCAddress(), client)
 	if err != nil {
 		log.Print(err)
@@ -94,7 +89,7 @@ func NewChain(pathEnd core.PathEnd, chainConfig ChainConfig, client *client.ETHC
 		SimpleToken:   *simpletoken,
 		ICS20Transfer: *ics20transfer,
 		ICS20Bank:     *ics20bank,
-		PathEnd:       pathEnd,
+		PathEnd:       *pathEnd,
 	}
 }
 
@@ -173,12 +168,12 @@ func InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, i
 	return chainA, chainB, nil
 }
 
-func parsePathConfig(configDir string) (*PathConfig, error) {
+func parsePathConfig(configDir string) (*core.Path, error) {
 	files, err := os.ReadDir(configDir)
 	if err != nil {
 		return nil, err
 	}
-	var pathConfig PathConfig
+	var pathConfig core.Path
 	for _, f := range files {
 		pth := fmt.Sprintf("%s/%s", configDir, f.Name())
 		if f.IsDir() {
