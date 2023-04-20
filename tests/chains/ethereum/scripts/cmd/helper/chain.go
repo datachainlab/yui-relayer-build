@@ -144,11 +144,11 @@ func makeGenTxOpts(chainID *big.Int, prv *ecdsa.PrivateKey) func(ctx context.Con
 }
 
 func InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) (*Chain, *Chain, error) {
-	pathConfig, err := parsePathConfig(configDir)
+	pathConfig, err := parsePathConfig(fmt.Sprintf("%s/%s", configDir, "path.json"))
 	if err != nil {
 		return nil, nil, err
 	}
-	chainConfigs, err := parseChainConfigs(configDir + "/chains")
+	chainConfigs, err := parseChainConfigs(fmt.Sprintf("%s/%s", configDir, "chains"))
 	if err != nil {
 		return nil, nil, err
 	}
@@ -168,24 +168,14 @@ func InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, i
 	return chainA, chainB, nil
 }
 
-func parsePathConfig(configDir string) (*core.Path, error) {
-	files, err := os.ReadDir(configDir)
+func parsePathConfig(configFile string) (*core.Path, error) {
+	var pathConfig core.Path
+	byt, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, err
 	}
-	var pathConfig core.Path
-	for _, f := range files {
-		pth := fmt.Sprintf("%s/%s", configDir, f.Name())
-		if f.IsDir() {
-			continue
-		}
-		byt, err := os.ReadFile(pth)
-		if err != nil {
-			return nil, err
-		}
-		if err := json.Unmarshal(byt, &pathConfig); err != nil {
-			return nil, err
-		}
+	if err := json.Unmarshal(byt, &pathConfig); err != nil {
+		return nil, err
 	}
 	return &pathConfig, nil
 }
