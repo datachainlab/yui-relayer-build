@@ -20,58 +20,23 @@ import (
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/ics20bank"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/ics20transferbank"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/contract/simpletoken"
+	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/relay/ethereum"
 	"github.com/hyperledger-labs/yui-ibc-solidity/pkg/wallet"
+	"github.com/hyperledger-labs/yui-relayer/core"
 )
 
 type PathConfig struct {
-	Src      PathInfo `json:"src"`
-	Dst      PathInfo `json:"dst"`
-	Mnemonic string   `json:"mnemonic"`
-}
-
-type PathInfo struct {
-	ChainID      string `json:"chain-id"`
-	ClientID     string `json:"client-id"`
-	ConnectionID string `json:"connection-id"`
-	ChannelID    string `json:"channel-id"`
-	PortID       string `json:"port-id"`
-	Order        string `json:"order"`
-	Version      string `json:"version"`
+	Src core.PathEnd `json:"src"`
+	Dst core.PathEnd `json:"dst"`
 }
 
 type ChainConfig struct {
-	Chain  ChainInfo    `json:"chain"`
-	Prover ProverConfig `json:"prover"`
-}
-
-type ChainInfo struct {
-	Type        string `json:"@type"`
-	ChainID     string `json:"chain_id"`
-	EthChainID  int    `json:"eth_chain_id"`
-	RPCAddr     string `json:"rpc_addr"`
-	HDWMnemonic string `json:"hdw_mnemonic"`
-	HDWPath     string `json:"hdw_path"`
-	IBCAddress  string `json:"ibc_address"`
+	Chain  ethereum.ChainConfig `json:"chain"`
+	Prover ProverConfig         `json:"prover"`
 }
 
 type ProverConfig struct {
 	Type string `json:"@type"`
-}
-
-type Connection struct {
-	ID                   string
-	ClientID             string
-	CounterpartyClientID string
-	NextChannelVersion   string
-	Channels             []Channel
-}
-
-type Channel struct {
-	PortID               string
-	ID                   string
-	ClientID             string
-	CounterpartyClientID string
-	Version              string
 }
 
 type Chain struct {
@@ -92,15 +57,14 @@ type Chain struct {
 	ICS20Bank     ics20bank.Ics20bank
 
 	// IBC specific helpers
-	ClientIDs   []string      // ClientID's used on this chain
-	Connections []*Connection // track connectionID's created for this chain
+	ClientIDs []string // ClientID's used on this chain
 
 	// Channel specific helpers
-	Channel Channel
+	Channel core.PathEnd
 }
 
-func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClient, mnemonicPhrase string, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) *Chain {
-	ibcHandler, err := ibchandler.NewIbchandler(common.HexToAddress(chainConfig.Chain.IBCAddress), client)
+func NewChain(pathEnd core.PathEnd, chainConfig ChainConfig, client *client.ETHClient, mnemonicPhrase string, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) *Chain {
+	ibcHandler, err := ibchandler.NewIbchandler(chainConfig.Chain.IBCAddress(), client)
 	if err != nil {
 		log.Print(err)
 		return nil
@@ -123,7 +87,7 @@ func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClie
 
 	return &Chain{
 		client:         client,
-		chainID:        int64(chainConfig.Chain.EthChainID),
+		chainID:        chainConfig.Chain.EthChainId,
 		ChainConfig:    chainConfig,
 		mnemonicPhrase: mnemonicPhrase,
 		keys:           make(map[uint32]*ecdsa.PrivateKey),
@@ -133,13 +97,7 @@ func NewChain(pathInfo PathInfo, chainConfig ChainConfig, client *client.ETHClie
 		SimpleToken:   *simpletoken,
 		ICS20Transfer: *ics20transfer,
 		ICS20Bank:     *ics20bank,
-		Channel: Channel{
-			PortID:               pathInfo.PortID,
-			ID:                   pathInfo.ChannelID,
-			ClientID:             pathInfo.ClientID,
-			CounterpartyClientID: pathInfo.ClientID,
-			Version:              pathInfo.Version,
-		},
+		Channel:       pathEnd,
 	}
 }
 
@@ -172,7 +130,7 @@ func (chain *Chain) LastHeader(ctx context.Context) (*gethtypes.Header, error) {
 	return chain.client.HeaderByNumber(ctx, nil)
 }
 
-func (chain *Chain) GetChannel() Channel {
+func (chain *Chain) GetChannel() core.PathEnd {
 	return chain.Channel
 }
 
@@ -208,16 +166,16 @@ func InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, i
 	}
 	src := chainConfigs[0]
 	dst := chainConfigs[1]
-	ethClientA, err := client.NewETHClient(src.Chain.RPCAddr)
+	ethClientA, err := client.NewETHClient(src.Chain.RpcAddr)
 	if err != nil {
 		return nil, nil, err
 	}
-	ethClientB, err := client.NewETHClient(dst.Chain.RPCAddr)
+	ethClientB, err := client.NewETHClient(dst.Chain.RpcAddr)
 	if err != nil {
 		return nil, nil, err
 	}
-	chainA := NewChain(pathConfig.Src, *src, ethClientA, src.Chain.HDWMnemonic, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
-	chainB := NewChain(pathConfig.Dst, *dst, ethClientB, dst.Chain.HDWMnemonic, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+	chainA := NewChain(pathConfig.Src, *src, ethClientA, src.Chain.HdwMnemonic, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+	chainB := NewChain(pathConfig.Dst, *dst, ethClientB, dst.Chain.HdwMnemonic, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
 
 	return chainA, chainB, nil
 }

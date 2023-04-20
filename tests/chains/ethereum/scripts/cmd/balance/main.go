@@ -58,7 +58,7 @@ func balanceOf(configDir string, index int64, simpleTokenAddress, ics20TransferB
 		return bankA, big.NewInt(0), err
 	}
 	chanB := chainB.GetChannel()
-	expectedDenom := fmt.Sprintf("%v/%v/%v", chanB.PortID, chanB.ID, baseDenom)
+	expectedDenom := fmt.Sprintf("%v/%v/%v", chanB.PortID, chanB.ChannelID, baseDenom)
 	bankB, err := chainB.ICS20Bank.BalanceOf(chainB.CallOpts(ctx, relayer), chainB.CallOpts(ctx, uint32(index)).From, expectedDenom)
 	if err != nil {
 		return bankA, bankB, err

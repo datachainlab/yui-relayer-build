@@ -87,8 +87,8 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleT
 		baseDenom,
 		uint64(amount),
 		chainB.CallOpts(ctx, toIndex).From,
-		chanA.PortID, chanA.ID,
-		heightB + 1000,
+		chanA.PortID, chanA.ChannelID,
+		heightB+1000,
 	)
 	if err != nil {
 		return err
