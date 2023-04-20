@@ -56,11 +56,8 @@ type Chain struct {
 	ICS20Transfer ics20transferbank.Ics20transferbank
 	ICS20Bank     ics20bank.Ics20bank
 
-	// IBC specific helpers
-	ClientIDs []string // ClientID's used on this chain
-
-	// Channel specific helpers
-	Channel core.PathEnd
+	// PathEnd specific helpers
+	PathEnd core.PathEnd
 }
 
 func NewChain(pathEnd core.PathEnd, chainConfig ChainConfig, client *client.ETHClient, mnemonicPhrase string, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) *Chain {
@@ -97,7 +94,7 @@ func NewChain(pathEnd core.PathEnd, chainConfig ChainConfig, client *client.ETHC
 		SimpleToken:   *simpletoken,
 		ICS20Transfer: *ics20transfer,
 		ICS20Bank:     *ics20bank,
-		Channel:       pathEnd,
+		PathEnd:       pathEnd,
 	}
 }
 
@@ -128,10 +125,6 @@ func (chain *Chain) CallOpts(ctx context.Context, index uint32) *bind.CallOpts {
 
 func (chain *Chain) LastHeader(ctx context.Context) (*gethtypes.Header, error) {
 	return chain.client.HeaderByNumber(ctx, nil)
-}
-
-func (chain *Chain) GetChannel() core.PathEnd {
-	return chain.Channel
 }
 
 func makeGenTxOpts(chainID *big.Int, prv *ecdsa.PrivateKey) func(ctx context.Context) *bind.TransactOpts {

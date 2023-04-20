@@ -57,7 +57,7 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleT
 		relayer  = 0
 		deployer = 0
 	)
-	chanA := chainA.GetChannel()
+	chanA := chainA.PathEnd
 	_, err = chainA.SimpleToken.Approve(chainA.TxOpts(ctx, deployer), common.HexToAddress(ics20BankAddress), big.NewInt(amount))
 	if err != nil {
 		return err
