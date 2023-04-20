@@ -36,7 +36,6 @@ require (
 	github.com/cosmos/ledger-go v0.9.2 // indirect
 	github.com/danieljoos/wincred v1.0.2 // indirect
 	github.com/datachainlab/ibc-mock-client v0.2.1 // indirect
-	github.com/datachainlab/solidity-protobuf/protobuf-solidity/src/protoc/go v0.0.0-20211215073805-59460caf6e59 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deckarep/golang-set/v2 v2.1.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
