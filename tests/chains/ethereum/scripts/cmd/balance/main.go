@@ -31,7 +31,10 @@ var rootCmd = &cobra.Command{
 		simpleTokenAddress := args[2]
 		ics20TransferBankAddress := args[3]
 		ics20BankAddress := args[4]
-		balanceA, balanceB := balanceOf(configDir, walletIndex, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+		balanceA, balanceB, err := balanceOf(configDir, walletIndex, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+		if err != nil {
+			log.Fatalln("balanceOf Error: ", err)
+		}
 		fmt.Printf("%d,%d\n", balanceA, balanceB)
 	},
 }
@@ -43,25 +46,22 @@ func main() {
 	}
 }
 
-func balanceOf(configDir string, index int64, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) (*big.Int, *big.Int) {
+func balanceOf(configDir string, index int64, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) (*big.Int, *big.Int, error) {
 	chainA, chainB, err := helper.InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
 	if err != nil {
-		log.Println("InitializeChains Error: ", err)
-		os.Exit(1)
+		return big.NewInt(0), big.NewInt(0), err
 	}
 	ctx := context.Background()
 	baseDenom := strings.ToLower(simpleTokenAddress)
 	bankA, err := chainA.ICS20Bank.BalanceOf(chainA.CallOpts(ctx, relayer), chainA.CallOpts(ctx, uint32(index)).From, baseDenom)
 	if err != nil {
-		log.Println("BalanceOf Error: ", err)
-		os.Exit(1)
+		return bankA, big.NewInt(0), err
 	}
 	chanB := chainB.GetChannel()
 	expectedDenom := fmt.Sprintf("%v/%v/%v", chanB.PortID, chanB.ID, baseDenom)
 	bankB, err := chainB.ICS20Bank.BalanceOf(chainB.CallOpts(ctx, relayer), chainB.CallOpts(ctx, uint32(index)).From, expectedDenom)
 	if err != nil {
-		log.Println("BalanceOf Error: ", err)
-		os.Exit(1)
+		return bankA, bankB, err
 	}
-	return bankA, bankB
+	return bankA, bankB, nil
 }

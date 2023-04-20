@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"math/big"
-	"os"
 	"strconv"
 	"strings"
 
@@ -21,38 +20,37 @@ var rootCmd = &cobra.Command{
 		configDir := args[0]
 		fromIndex, err := strconv.ParseInt(args[1], 10, 32)
 		if err != nil {
-			log.Println(err)
-			os.Exit(1)
+			log.Fatalln(err)
 		}
 		toIndex, err := strconv.ParseInt(args[2], 10, 32)
 		if err != nil {
-			log.Println(err)
-			os.Exit(1)
+			log.Fatalln(err)
 		}
 		amount, err := strconv.ParseInt(args[3], 10, 64)
 		if err != nil {
-			log.Println(err)
-			os.Exit(1)
+			log.Fatalln(err)
 		}
 		simpleTokenAddress := args[4]
 		ics20TransferBankAddress := args[5]
 		ics20BankAddress := args[6]
-		Transfer(configDir, uint32(fromIndex), uint32(toIndex), amount, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+		err = Transfer(configDir, uint32(fromIndex), uint32(toIndex), amount, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
+		if err != nil {
+			log.Fatalln("transfer Error: ", err)
+		}
 	},
 }
 
 func main() {
 	err := rootCmd.Execute()
 	if err != nil {
-		os.Exit(1)
+		log.Fatalln(err)
 	}
 }
 
 func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress string) error {
 	chainA, chainB, err := helper.InitializeChains(configDir, simpleTokenAddress, ics20TransferBankAddress, ics20BankAddress)
 	if err != nil {
-		log.Println("InitializeChains Error: ", err)
-		os.Exit(1)
+		return err
 	}
 	ctx := context.Background()
 	const (
@@ -62,8 +60,7 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleT
 	chanA := chainA.GetChannel()
 	_, err = chainA.SimpleToken.Approve(chainA.TxOpts(ctx, deployer), common.HexToAddress(ics20BankAddress), big.NewInt(amount))
 	if err != nil {
-		log.Println("token approve error: ", err)
-		os.Exit(1)
+		return err
 	}
 	log.Println("1. token approve success")
 
@@ -74,8 +71,7 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleT
 		chainA.CallOpts(ctx, fromIndex).From,
 	)
 	if err != nil {
-		log.Println("deposit error: ", err)
-		os.Exit(1)
+		return err
 	}
 	log.Println("2. deposit success")
 
@@ -89,8 +85,7 @@ func Transfer(configDir string, fromIndex, toIndex uint32, amount int64, simpleT
 		uint64(chainB.LastHeader().Number.Int64())+1000,
 	)
 	if err != nil {
-		log.Println("sendTransfer error: ", err)
-		os.Exit(1)
+		return err
 	}
 	log.Println("3. sendTransfer success")
 
