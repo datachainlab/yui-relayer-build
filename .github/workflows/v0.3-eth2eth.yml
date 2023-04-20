@@ -1,15 +1,15 @@
-name: tm2tm@v0.3
+name: eth2eth@v0.3
 on: [push, pull_request]
 
 env:
   CACHE_BIN_RELAYER_KEY: bin-relayer
   CACHE_BIN_RELAYER_PATH: ./build/yrly
-  CACHE_DOCKER_TENDERMINT_KEY: docker-tendermint
-  CACHE_DOCKER_TENDERMINT_DIR: /tmp/tendermint
+  CACHE_DOCKER_ETHEREUM_KEY: docker-ethereum
+  CACHE_DOCKER_ETHEREUM_DIR: /tmp/ethereum
 
 jobs:
-  tm2tm-test:
-    name: tm2tm-test
+  eth2eth-test:
+    name: eth2eth-test
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -17,7 +17,7 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
           ref: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha }}
-          check-regexp: '(relayer|tendermint)-build'
+          check-regexp: '(relayer|ethereum)-build'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 30
       - name: Restore relayer binary cache
@@ -25,17 +25,17 @@ jobs:
         with:
           path: ${{ env.CACHE_BIN_RELAYER_PATH }}
           key: ${{ runner.os }}-${{ env.CACHE_BIN_RELAYER_KEY }}-${{ hashFiles('relayer/**', 'go.sum') }}
-      - name: Restore Tendermint docker image cache
+      - name: Restore Ethereum docker image cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.CACHE_DOCKER_TENDERMINT_DIR }}
-          key: ${{ runner.os }}-${{ env.CACHE_DOCKER_TENDERMINT_KEY }}-${{ hashFiles('tests/chains/tendermint/**', '!**/.git/**') }}
-      - name: Load Tendermint docker images
+          path: ${{ env.CACHE_DOCKER_ETHEREUM_DIR }}
+          key: ${{ runner.os }}-${{ env.CACHE_DOCKER_ETHEREUM_KEY }}-${{ hashFiles('tests/chains/ethereum/**', '!**/.git/**') }}
+      - name: Load Ethereum docker images
         working-directory: ./tests/scripts
         run: |
-          ./load_docker_images $CACHE_DOCKER_TENDERMINT_DIR tendermint-chain0:latest tendermint-chain1:latest
+          ./load_docker_images $CACHE_DOCKER_ETHEREUM_DIR ethereum-ganache0:latest ethereum-ganache1:latest
       - name: Run Test
-        working-directory: ./tests/cases/tm2tm
+        working-directory: ./tests/cases/eth2eth
         run: |
           make network
           make test

@@ -12,6 +12,8 @@ env:
   CACHE_DOCKER_CORDA_DIR: /tmp/corda
   CACHE_DOCKER_TENDERMINT_KEY: docker-tendermint
   CACHE_DOCKER_TENDERMINT_DIR: /tmp/tendermint
+  CACHE_DOCKER_ETHEREUM_KEY: docker-ethereum
+  CACHE_DOCKER_ETHEREUM_DIR: /tmp/ethereum
 
 jobs:
   relayer-build:
@@ -57,3 +59,24 @@ jobs:
         working-directory: ./tests/scripts
         run: |
           ./save_docker_images $CACHE_DOCKER_TENDERMINT_DIR tendermint-chain0:latest tendermint-chain1:latest
+
+  ethereum-build:
+    name: ethereum-build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        id: cache-docker-ethereum
+        with:
+          path: ${{ env.CACHE_DOCKER_ETHEREUM_DIR }}
+          key: ${{ runner.os }}-${{ env.CACHE_DOCKER_ETHEREUM_KEY }}-${{ hashFiles('tests/chains/ethereum/**', '!**/.git/**') }}
+      - name: Build docker images
+        if: steps.cache-docker-ethereum.outputs.cache-hit != 'true'
+        working-directory: ./tests/chains/ethereum
+        run: |
+          make docker-images
+      - name: Save docker images
+        if: steps.cache-docker-ethereum.outputs.cache-hit != 'true'
+        working-directory: ./tests/scripts
+        run: |
+          ./save_docker_images $CACHE_DOCKER_ETHEREUM_DIR ethereum-ganache0:latest ethereum-ganache1:latest

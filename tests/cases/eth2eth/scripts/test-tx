@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -eu
+
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+source ${SCRIPT_DIR}/util/relayer-util
+
+BALANCE_GO=${SCRIPT_DIR}/../../../chains/ethereum/scripts/cmd/balance/main.go
+TRANSFER_GO=${SCRIPT_DIR}/../../../chains/ethereum/scripts/cmd/transfer/main.go
+
+SIMPLE_TOKEN_ADDRESS="0xff77D90D6aA12db33d3Ba50A34fB25401f6e4c4F"
+ICS20_TRANSFER_BANK_ADDRESS="0xaE1C9125BbcF63bf51294C4D15CBD472782E330D"
+ICS20_BANK_ADDRESS="0x2F5703804E29F4252FA9405B8D357220d11b3bd9"
+
+show_balance() {
+  state=$1
+  user_id=$2
+  user_name=$3
+  result=$(go run ${BALANCE_GO} ${CONF_DIR} ${user_id} ${SIMPLE_TOKEN_ADDRESS} ${ICS20_TRANSFER_BANK_ADDRESS} ${ICS20_BANK_ADDRESS})
+  result1=$(echo $result | cut -d ',' -f 1)
+  result2=$(echo $result | cut -d ',' -f 2)
+  echo "${state} ibc0 balance of ${user_name}: $result1"
+  echo "${state} ibc1 balance of ${user_name}: $result2"
+}
+
+show_balance Before 1 alice
+show_balance Before 2 bob
+
+echo "!!! ibc0 -> ibc1 !!!"
+
+TX_INTERNAL=3
+
+go run ${TRANSFER_GO} ${CONF_DIR} 1 2 5 ${SIMPLE_TOKEN_ADDRESS} ${ICS20_TRANSFER_BANK_ADDRESS} ${ICS20_BANK_ADDRESS}
+sleep ${TX_INTERNAL}
+${RLY} tx relay ibc01
+sleep ${TX_INTERNAL}
+${RLY} tx acks ibc01
+sleep ${TX_INTERNAL}
+
+show_balance After 1 alice
+show_balance After 2 bob
