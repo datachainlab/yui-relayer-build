@@ -14,6 +14,12 @@ In addition, the yui-relayer version corresponds to the [ibc-go](https://github.
 |--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
 | Tendermint   | [![tm2tm@v0.3](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.3-tm2tm.yml/badge.svg?branch=v0.3)](https://github.com/datachainlab/yui-relayer-build/blob/v0.3/.github/workflows/v0.3-tm2tm.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.3/tests/cases/tm2tm) |
 
+#### Ethereum
+
+| counterparty | e2e-test                                                                                                                                                                                                                | directory                                                                             |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| Ethereum   | [![eth2eth@v0.3](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.3-eth2eth.yml/badge.svg?branch=v0.3)](https://github.com/datachainlab/yui-relayer-build/blob/v0.3/.github/workflows/v0.3-eth2eth.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.3/tests/cases/eth2eth) |
+
 ### v0.2
 
 #### Tendermint
