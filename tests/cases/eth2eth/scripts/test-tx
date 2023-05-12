@@ -12,9 +12,8 @@ if ! which ${ICS20_CLI} > /dev/null 2>&1; then
   if [ ! -d "${TMP_DIR}" ]; then
     mkdir -p ${TMP_DIR}
   fi
-  git clone git@github.com:datachainlab/ethereum-ics20-cli.git ${TMP_DIR}/ethereum-ics20-cli
+  git clone https://github.com/datachainlab/ethereum-ics20-cli.git ${TMP_DIR}/ethereum-ics20-cli
   cd ${TMP_DIR}/ethereum-ics20-cli
-  git checkout remove-ref-chain-config
   go install
 fi
 
