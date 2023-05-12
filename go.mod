@@ -3,7 +3,6 @@ module github.com/datachainlab/yui-relayer-build
 go 1.20
 
 require (
-	github.com/ethereum/go-ethereum v1.11.6
 	github.com/hyperledger-labs/yui-ibc-solidity v0.3.4
 	github.com/hyperledger-labs/yui-relayer v0.3.2
 )
