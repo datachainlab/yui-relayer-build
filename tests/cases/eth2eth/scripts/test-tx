@@ -15,6 +15,7 @@ if ! which ${ICS20_CLI} > /dev/null 2>&1; then
   git clone https://github.com/datachainlab/ethereum-ics20-cli.git ${TMP_DIR}/ethereum-ics20-cli
   cd ${TMP_DIR}/ethereum-ics20-cli
   go install
+  export PATH=$PATH:$(go env GOPATH)/bin
 fi
 
 SIMPLE_TOKEN_ADDRESS="0xff77d90d6aa12db33d3ba50a34fb25401f6e4c4f"
