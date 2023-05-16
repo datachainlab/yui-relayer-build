@@ -52,7 +52,9 @@ show_balance() {
 }
 
 show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${SIMPLE_TOKEN_ADDRESS} alice
-show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${SIMPLE_TOKEN_ADDRESS} bob
+show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${SIMPLE_TOKEN_ADDRESS} bob
+show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${SIMPLE_TOKEN_ADDRESS} alice
+show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${SIMPLE_TOKEN_ADDRESS} bob
 
 echo "!!! ibc0 -> ibc1 !!!"
 
@@ -75,5 +77,7 @@ sleep ${TX_INTERNAL}
 # create chain b token address
 CHAIN_B_TOKEN_ADDRESS="${PORT_ID}/${CHANNEL_ID}/${SIMPLE_TOKEN_ADDRESS}"
 
+show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${CHAIN_B_TOKEN_ADDRESS} alice
+show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${CHAIN_B_TOKEN_ADDRESS} bob
 show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_TOKEN_ADDRESS} alice
 show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_TOKEN_ADDRESS} bob
