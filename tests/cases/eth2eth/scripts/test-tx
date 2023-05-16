@@ -53,8 +53,8 @@ show_balance() {
 
 show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${SIMPLE_TOKEN_ADDRESS} alice
 show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${SIMPLE_TOKEN_ADDRESS} bob
-show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${SIMPLE_TOKEN_ADDRESS} alice
-show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${SIMPLE_TOKEN_ADDRESS} bob
+show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${SIMPLE_TOKEN_ADDRESS} alice
+show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${SIMPLE_TOKEN_ADDRESS} bob
 
 echo "!!! ibc0 -> ibc1 !!!"
 
