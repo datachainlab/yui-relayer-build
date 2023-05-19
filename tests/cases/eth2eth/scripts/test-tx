@@ -47,7 +47,7 @@ show_balance() {
   user_wallet=$3
   token_address=$4
   user_name=$5
-  balance=$(${ICS20_CLI} balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --token-address=${token_address})
+  balance=$(${ICS20_CLI} balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --denom=${token_address})
   echo "${state} ${chain} balance of ${user_name}: $balance"
 }
 
@@ -66,7 +66,7 @@ CHAIN_B_HEIGHT=$(${ICS20_CLI} chain height --rpc-address=${RPC_ADDRESS_B})
 TIMEOUT_HEIGHT=$((CHAIN_B_HEIGHT + 1000))
 
 # transfer token from alice to bob
-${ICS20_CLI} transfer --rpc-address=${RPC_ADDRESS_A} --chain-id=${CHAIN_A_ID} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${FROM_INDEX} --to-address=${WALLET_ADDRESS_B} --amount=${TRANSFER_AMOUNT} --token-address=${SIMPLE_TOKEN_ADDRESS} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
+${ICS20_CLI} transfer --rpc-address=${RPC_ADDRESS_A} --chain-id=${CHAIN_A_ID} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${FROM_INDEX} --to-address=${WALLET_ADDRESS_B} --amount=${TRANSFER_AMOUNT} --denom=${SIMPLE_TOKEN_ADDRESS} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
 
 sleep ${TX_INTERNAL}
 ${RLY} tx relay ${PATH_NAME}
