@@ -47,9 +47,9 @@ show_balance() {
   state=$1
   chain=$2
   user_wallet=$3
-  token_address=$4
+  denom=$4
   user_name=$5
-  balance=$(${ICS20_CLI} balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --denom=${token_address})
+  balance=$(${ICS20_CLI} balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --denom=${denom})
   echo "${state} ${chain} balance of ${user_name}: $balance"
 }
 
@@ -77,9 +77,9 @@ ${RLY} tx acks ${PATH_NAME}
 sleep ${TX_INTERNAL}
 
 # create chain b token address
-CHAIN_B_TOKEN_ADDRESS="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
+CHAIN_B_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
 
-show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${CHAIN_B_TOKEN_ADDRESS} alice
-show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${CHAIN_B_TOKEN_ADDRESS} bob
-show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_TOKEN_ADDRESS} alice
-show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_TOKEN_ADDRESS} bob
+show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
+show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
+show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
+show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
