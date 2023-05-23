@@ -14,6 +14,7 @@ if ! which ${ICS20_CLI} > /dev/null 2>&1; then
   fi
   git clone https://github.com/datachainlab/ethereum-ics20-cli.git ${TMP_DIR}/ethereum-ics20-cli
   cd ${TMP_DIR}/ethereum-ics20-cli
+  git checkout v0.0.2
   go install
   export PATH=$PATH:$(go env GOPATH)/bin
 fi
@@ -21,6 +22,8 @@ fi
 SIMPLE_TOKEN_ADDRESS="0xff77d90d6aa12db33d3ba50a34fb25401f6e4c4f"
 ICS20_TRANSFER_BANK_ADDRESS="0xaE1C9125BbcF63bf51294C4D15CBD472782E330D"
 ICS20_BANK_ADDRESS="0x2F5703804E29F4252FA9405B8D357220d11b3bd9"
+
+DENOM=$(echo "$SIMPLE_TOKEN_ADDRESS" | tr '[:upper:]' '[:lower:]')
 
 CHAIN_A_JSON=${CONF_DIR}/chains/ibc-0.json
 CHAIN_B_JSON=${CONF_DIR}/chains/ibc-1.json
@@ -45,16 +48,16 @@ show_balance() {
   state=$1
   chain=$2
   user_wallet=$3
-  token_address=$4
+  denom=$4
   user_name=$5
-  balance=$(${ICS20_CLI} balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --token-address=${token_address})
+  balance=$(${ICS20_CLI} balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --denom=${denom})
   echo "${state} ${chain} balance of ${user_name}: $balance"
 }
 
-show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${SIMPLE_TOKEN_ADDRESS} alice
-show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${SIMPLE_TOKEN_ADDRESS} bob
-show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${SIMPLE_TOKEN_ADDRESS} alice
-show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${SIMPLE_TOKEN_ADDRESS} bob
+show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
+show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob
+show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${DENOM} alice
+show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${DENOM} bob
 
 echo "!!! ibc0 -> ibc1 !!!"
 
@@ -66,7 +69,7 @@ CHAIN_B_HEIGHT=$(${ICS20_CLI} chain height --rpc-address=${RPC_ADDRESS_B})
 TIMEOUT_HEIGHT=$((CHAIN_B_HEIGHT + 1000))
 
 # transfer token from alice to bob
-${ICS20_CLI} transfer --rpc-address=${RPC_ADDRESS_A} --chain-id=${CHAIN_A_ID} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${FROM_INDEX} --to-address=${WALLET_ADDRESS_B} --amount=${TRANSFER_AMOUNT} --token-address=${SIMPLE_TOKEN_ADDRESS} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
+${ICS20_CLI} transfer --rpc-address=${RPC_ADDRESS_A} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${FROM_INDEX} --to-address=${WALLET_ADDRESS_B} --amount=${TRANSFER_AMOUNT} --denom=${DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
 
 sleep ${TX_INTERNAL}
 ${RLY} tx relay ${PATH_NAME}
@@ -75,9 +78,9 @@ ${RLY} tx acks ${PATH_NAME}
 sleep ${TX_INTERNAL}
 
 # create chain b token address
-CHAIN_B_TOKEN_ADDRESS="${PORT_ID}/${CHANNEL_ID}/${SIMPLE_TOKEN_ADDRESS}"
+CHAIN_B_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
 
-show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${CHAIN_B_TOKEN_ADDRESS} alice
-show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${CHAIN_B_TOKEN_ADDRESS} bob
-show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_TOKEN_ADDRESS} alice
-show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_TOKEN_ADDRESS} bob
+show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
+show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
+show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
+show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
