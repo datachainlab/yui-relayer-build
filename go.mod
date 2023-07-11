@@ -2,8 +2,6 @@ module github.com/datachainlab/yui-relayer-build
 
 go 1.20
 
-replace github.com/datachainlab/ethereum-ibc-relay-chain => github.com/siburu/ethereum-ibc-relay-chain v0.0.0-20230711013803-8de2106b48c4
-
 replace (
 	// https://github.com/cosmos/cosmos-sdk/blob/v0.47.3/go.mod#L171-L182
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
@@ -11,7 +9,7 @@ replace (
 )
 
 require (
-	github.com/datachainlab/ethereum-ibc-relay-chain v0.1.1
+	github.com/datachainlab/ethereum-ibc-relay-chain v0.2.1
 	github.com/hyperledger-labs/yui-relayer v0.4.2
 )
 
