@@ -1,4 +1,4 @@
-name: build@v0.3
+name: build@v0.4
 on: [push, pull_request]
 
 env:
