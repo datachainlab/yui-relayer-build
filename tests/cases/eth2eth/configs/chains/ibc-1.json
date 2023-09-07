@@ -11,6 +11,7 @@
     "initial_recv_checkpoint": 1
   },
   "prover": {
-    "@type": "/relayer.provers.mock.config.ProverConfig"
+    "@type": "/relayer.provers.mock.config.ProverConfig",
+    "finality_delay": 3
   }
 }
