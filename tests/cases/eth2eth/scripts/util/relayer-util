@@ -30,7 +30,7 @@ waitRelay() {
       echo "[try:$i] waiting for ${label} finalization ..."
       sleep $RETRY_INTERVAL
       unrelayed=$(${RLY} query ${query_type} ${PATH_NAME} | jq "${filter}")
-      if [ $unrelayed -gt 0 ] then
+      if [ $unrelayed -gt 0 ]; then
         break
       fi
   done
