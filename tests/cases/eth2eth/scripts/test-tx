@@ -14,7 +14,7 @@ if ! which ${ICS20_CLI} > /dev/null 2>&1; then
   fi
   git clone https://github.com/datachainlab/ethereum-ics20-cli.git ${TMP_DIR}/ethereum-ics20-cli
   cd ${TMP_DIR}/ethereum-ics20-cli
-  git checkout v0.0.3
+  git checkout v0.0.4
   go install
   export PATH=$PATH:$(go env GOPATH)/bin
 fi
@@ -65,7 +65,7 @@ TRANSFER_AMOUNT=10
 echo "!!! ibc0 deployer -> ibc0 alice !!!"
 
 # transfer token from deployer to alice
-${ICS20_CLI} erc20 transfer --rpc-address=${RPC_ADDRESS_A} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${DEPLOYER_INDEX} --to-address=${WALLET_ADDRESS_A} --amount=${TRANSFER_AMOUNT} --denom=${DENOM}
+${ICS20_CLI} erc20 transfer --rpc-address=${RPC_ADDRESS_A} --mnemonic="${MNEMONIC_A}" --from-index=${DEPLOYER_INDEX} --to-address=${WALLET_ADDRESS_A} --amount=${TRANSFER_AMOUNT} --denom=${DENOM}
 
 echo "!!! ibc0 alice -> ibc1 bob !!!"
 
@@ -78,11 +78,11 @@ TIMEOUT_HEIGHT=$((CHAIN_B_HEIGHT + 1000))
 # transfer token from alice (ibc0) to bob (ibc1)
 ${ICS20_CLI} ics20 transfer --rpc-address=${RPC_ADDRESS_A} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${ALICE_INDEX} --to-address=${WALLET_ADDRESS_B} --amount=${TRANSFER_AMOUNT} --denom=${DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
 
-sleep ${TX_INTERVAL}
+waitRelay "sendPacket" "unrelayed-packets" "src"
 ${RLY} tx relay ${PATH_NAME}
-sleep ${TX_INTERVAL}
+
+waitRelay "recvPacket" "unrelayed-acknowledgements" "dst"
 ${RLY} tx acks ${PATH_NAME}
-sleep ${TX_INTERVAL}
 
 # create chain b token address
 CHAIN_B_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
@@ -99,11 +99,11 @@ echo "!!! ibc1 bob -> ibc0 alice !!!"
 # transfer token from bob (ibc1) to alice (ibc0)
 ${ICS20_CLI} ics20 transfer --rpc-address=${RPC_ADDRESS_B} --mnemonic="${MNEMONIC_B}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${BOB_INDEX} --to-address=${WALLET_ADDRESS_A} --amount=${TRANSFER_AMOUNT} --denom=${CHAIN_B_DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
 
-sleep ${TX_INTERVAL}
+waitRelay "sendPacket" "unrelayed-packets" "dst"
 ${RLY} tx relay ${PATH_NAME}
-sleep ${TX_INTERVAL}
+
+waitRelay "recvPacket" "unrelayed-acknowledgements" "src"
 ${RLY} tx acks ${PATH_NAME}
-sleep ${TX_INTERVAL}
 
 show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
 show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob
