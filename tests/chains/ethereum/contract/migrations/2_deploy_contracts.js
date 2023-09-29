@@ -7,6 +7,7 @@ const IBCHandler = artifacts.require("OwnableIBCHandler");
 const SimpleToken = artifacts.require("SimpleToken");
 const ICS20TransferBank = artifacts.require("ICS20TransferBank");
 const ICS20Bank = artifacts.require("ICS20Bank");
+const MockApp = artifacts.require("MockApp");
 
 const deployCore = async (deployer) => {
   await deployer.deploy(IBCClient);
@@ -23,6 +24,8 @@ const deployApp = async (deployer) => {
   await deployer.deploy(SimpleToken, "simple", "simple", 1000000);
   await deployer.deploy(ICS20Bank)
   await deployer.deploy(ICS20TransferBank, IBCHandler.address, ICS20Bank.address);
+
+  await deployer.deploy(MockApp, IBCHandler.address);
 };
 
 module.exports = async function (deployer) {
