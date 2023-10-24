@@ -1,0 +1,39 @@
+version: '3.5'
+
+networks:
+  relayer-e2e:
+    name: &network-common relayer-e2e
+
+services:
+# Tendermint
+  tendermint-chain0:
+    container_name: tendermint-chain0
+    image: tendermint-chain0:${TAG}
+    ports:
+      - 26656:26656
+      - 26657:26657
+      - 6060:6060
+      - 9090:9090
+    healthcheck:
+      test: "wget -q -O - http://localhost:26657/health || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - *network-common
+    environment:
+      USE_MOCK_CLIENT: 1
+
+# Ethereum
+  ethereum-ganache0:
+    container_name: ethereum-ganache0
+    image: ethereum-ganache0:${TAG}
+    ports:
+      - 8645:8545
+    healthcheck:
+      test: "wget -q -O - http://localhost:8545/health || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - *network-common

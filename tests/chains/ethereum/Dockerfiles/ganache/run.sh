@@ -7,4 +7,5 @@ node "/app/ganache-core.docker.cli.js" \
   --defaultBalanceEther 10000 \
   --mnemonic "math razor capable expose worth grape metal sunset metal sudden usage scheme" \
   --blockTime 1 \
+  --debug \
   $@

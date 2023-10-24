@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -eux
+
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+CONF_DIR=${SCRIPT_DIR}/../configs
+RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
+RLY="${RLY_BINARY} --debug"
+
+
+ICS20_CLI="ethereum-ics20-cli"
+
+TMP_DIR=/tmp
+if ! which ${ICS20_CLI} > /dev/null 2>&1; then
+  if [ ! -d "${TMP_DIR}" ]; then
+    mkdir -p ${TMP_DIR}
+  fi
+  git clone https://github.com/datachainlab/ethereum-ics20-cli.git ${TMP_DIR}/ethereum-ics20-cli
+  cd ${TMP_DIR}/ethereum-ics20-cli
+  git checkout v0.0.4
+  go install
+  export PATH=$PATH:$(go env GOPATH)/bin
+fi
+
+TX_INTERVAL=3
+
+TM_ADDRESS0=$(${RLY} tendermint keys show ibc0 testkey)
+
+CHAIN_B_JSON=${CONF_DIR}/demo/ibc-1.json
+MNEMONIC_B=$(jq -r '.chain."hdw_mnemonic"' ${CHAIN_B_JSON})
+WALLET_ADDRESS_B=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC_B}" --wallet-index=1)
+
+echo "!!! ibc0 -> ibc1 !!!"
+
+echo "Before ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS0})"
+# echo "Before ibc1 balance: $(${RLY} query balance ibc1 ${TM_ADDRESS1})"
+
+${RLY} tx transfer ibc01 ibc0 ibc1 100samoleans ${WALLET_ADDRESS_B}
+sleep ${TX_INTERVAL}
+${RLY} tx relay ibc01
+sleep ${TX_INTERVAL}
+${RLY} tx acks ibc01
+sleep ${TX_INTERVAL}
+
+echo "After ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS0})"
+# echo "After ibc1 balance: $(${RLY} query balance ibc1 ${WALLET_ADDRESS_B})"
