@@ -12,6 +12,6 @@
   },
   "prover": {
     "@type": "/relayer.provers.mock.config.ProverConfig",
-    "finality_delay": 3
+    "finality_delay": 0
   }
 }

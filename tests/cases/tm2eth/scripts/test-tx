@@ -7,9 +7,8 @@ CONF_DIR=${SCRIPT_DIR}/../configs
 RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
 RLY="${RLY_BINARY} --debug"
 
-
+# ics20-cli
 ICS20_CLI="ethereum-ics20-cli"
-
 TMP_DIR=/tmp
 if ! which ${ICS20_CLI} > /dev/null 2>&1; then
   if [ ! -d "${TMP_DIR}" ]; then
@@ -24,23 +23,44 @@ fi
 
 TX_INTERVAL=3
 
-TM_ADDRESS0=$(${RLY} tendermint keys show ibc0 testkey)
+TM_ADDRESS=$(${RLY} tendermint keys show ibc0 testkey)
 
-CHAIN_B_JSON=${CONF_DIR}/demo/ibc-1.json
-MNEMONIC_B=$(jq -r '.chain."hdw_mnemonic"' ${CHAIN_B_JSON})
-WALLET_ADDRESS_B=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC_B}" --wallet-index=1)
+ICS20_BANK_ADDRESS="0xaa43d337145E8930d01cb4E60Abf6595C692921E"
+
+PATH_JSON=${CONF_DIR}/path.json
+PORT_ID=$(jq -r '.dst."port-id"' ${PATH_JSON})
+CHANNEL_ID=$(jq -r '.dst."channel-id"' ${PATH_JSON})
+
+ETH_JSON=${CONF_DIR}/demo/ibc-1.json
+RPC_ADDRESS=$(jq -r '.chain."rpc_addr"' ${ETH_JSON})
+MNEMONIC=$(jq -r '.chain."hdw_mnemonic"' ${ETH_JSON})
+ETH_ADDRESS=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC}" --wallet-index=2)
+
+DENOM="samoleans"
+
+ETH_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
+
+# ethereum balance
+show_balance() {
+  state=$1
+  chain=$2
+  user_wallet=$3
+  denom=$4
+  balance=$(${ICS20_CLI} ics20 balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --denom=${denom})
+  echo "${state} ${chain} balance $balance"
+}
+
+echo "Before ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS})"
+show_balance Before ${RPC_ADDRESS} ${ETH_ADDRESS} ${ETH_DENOM}
 
 echo "!!! ibc0 -> ibc1 !!!"
 
-echo "Before ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS0})"
-# echo "Before ibc1 balance: $(${RLY} query balance ibc1 ${TM_ADDRESS1})"
-
-${RLY} tx transfer ibc01 ibc0 ibc1 100samoleans ${WALLET_ADDRESS_B}
+${RLY} tx transfer ibc01 ibc0 ibc1 100samoleans ${ETH_ADDRESS}
 sleep ${TX_INTERVAL}
 ${RLY} tx relay ibc01
 sleep ${TX_INTERVAL}
 ${RLY} tx acks ibc01
 sleep ${TX_INTERVAL}
 
-echo "After ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS0})"
-# echo "After ibc1 balance: $(${RLY} query balance ibc1 ${WALLET_ADDRESS_B})"
+echo "After ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS})"
+show_balance After ${RPC_ADDRESS} ${ETH_ADDRESS} ${ETH_DENOM}
