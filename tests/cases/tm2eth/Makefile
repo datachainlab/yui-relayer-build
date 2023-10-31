@@ -3,10 +3,9 @@ include ../../docker.mk
 .PHONY: network
 network:
 	TAG=${DOCKER_TAG} $(DOCKER_COMPOSE) \
-		-f ./docker-compose-test.yaml \
+		-f ../docker-compose-test.yaml \
 		up -d \
-		tendermint-chain0 \
-		ethereum-ganache0
+		tendermint-chain0-mock ethereum-ganache0
 
 .PHONY: test
 test:
@@ -18,5 +17,5 @@ test:
 .PHONY: network-down
 network-down:
 	TAG=${DOCKER_TAG} $(DOCKER_COMPOSE) \
-		-f ./docker-compose-test.yaml \
+		-f ../docker-compose-test.yaml \
 		down -v --remove-orphans
