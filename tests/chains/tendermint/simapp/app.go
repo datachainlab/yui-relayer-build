@@ -382,6 +382,7 @@ func NewSimApp(
 		// this is a workaround in case the counterparty chain uses mock-client
 		app.IBCKeeper = overrideIBCClientKeeper(*app.IBCKeeper, appCodec, keys[ibcexported.StoreKey], app.GetSubspace(ibcexported.ModuleName), app.StakingKeeper)
 	}
+
 	// register the proposal types
 	govRouter := govv1beta1.NewRouter()
 	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).

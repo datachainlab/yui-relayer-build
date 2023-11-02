@@ -9,11 +9,6 @@ RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
 RLY="${RLY_BINARY} --debug"
 FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
 
-CHAINID_ONE=ibc0
-CHAINID_TWO=ibc1
-RLYKEY=testkey
-PATH_NAME=ibc01
-
 echo "Generating ${RLY_BINARY} configurations..."
 
 # Ensure ${RLY_BINARY} is installed
