@@ -399,8 +399,8 @@ github.com/cucumber/common/gherkin/go/v22 v22.0.0 h1:4K8NqptbvdOrjL9DEea6HFjSpbd
 github.com/cucumber/common/messages/go/v17 v17.1.1 h1:RNqopvIFyLWnKv0LfATh34SWBhXeoFTJnSrgm9cT/Ts=
 github.com/danieljoos/wincred v1.1.2 h1:QLdCxFs1/Yl4zduvBdcHB8goaYk9RARS2SgLLRuAyr0=
 github.com/danieljoos/wincred v1.1.2/go.mod h1:GijpziifJoIBfYh+S7BbkdUTU4LfM+QnGqR5Vl2tAx0=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.2.6 h1:sVonmqqP+uIe8UAfIe778icn/el6xwUv3u7eboJDv2Y=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.2.6/go.mod h1:pSJ5MCqRsSERugEQtXMoKiznET4HbP81PE1Z0ZUfUv4=
+github.com/datachainlab/ethereum-ibc-relay-chain v0.2.7 h1:8se6ilNleijA+kO0yQe+nWyaBoGdTQHA9Qs/zvL9FAM=
+github.com/datachainlab/ethereum-ibc-relay-chain v0.2.7/go.mod h1:Y+N8eThA6jBz6TrwwhliDDRxhd6UwT3M3gMLu2YvbNA=
 github.com/datachainlab/ibc-mock-client v0.3.2 h1:SxBkaiuHWQ+1L085m2L35Fku3am7I6YL6B7dwurtDOM=
 github.com/datachainlab/ibc-mock-client v0.3.2/go.mod h1:FfqyF+VJKp8jlIG21lTNJJIp8RCaxSrx6vjhNkfwgBM=
 github.com/davecgh/go-spew v0.0.0-20171005155431-ecdeabc65495/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
