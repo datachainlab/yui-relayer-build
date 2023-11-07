@@ -58,7 +58,7 @@ jobs:
         if: steps.cache-docker-tendermint.outputs.cache-hit != 'true'
         working-directory: ./tests/scripts
         run: |
-          ./save_docker_images $CACHE_DOCKER_TENDERMINT_DIR tendermint-chain0:latest tendermint-chain1:latest tendermint-chain0-mock:latest tendermint-chain1-mock:latest
+          ./save_docker_images $CACHE_DOCKER_TENDERMINT_DIR tendermint-chain0:latest
 
   ethereum-build:
     name: ethereum-build
