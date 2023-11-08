@@ -11,11 +11,7 @@
     "max_retry_for_commit": 5
   },
   "prover": {
-    "@type": "/relayer.chains.tendermint.config.ProverConfig",
-    "trusting_period": "336h",
-    "refresh_threshold_rate": {
-      "numerator": 2,
-      "denominator": 3
-    }
+    "@type": "/relayer.provers.mock.config.ProverConfig",
+    "finality_delay": 0
   }
 }

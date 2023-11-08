@@ -4,7 +4,7 @@ const IBCConnection = artifacts.require("IBCConnection");
 const IBCChannelHandshake = artifacts.require("IBCChannelHandshake");
 const IBCPacket = artifacts.require("IBCPacket");
 const IBCHandler = artifacts.require("OwnableIBCHandler");
-const SimpleToken = artifacts.require("SimpleToken");
+const ERC20Token = artifacts.require("ERC20Token");
 const ICS20TransferBank = artifacts.require("ICS20TransferBank");
 const ICS20Bank = artifacts.require("ICS20Bank");
 
@@ -20,7 +20,7 @@ const deployCore = async (deployer) => {
 const deployApp = async (deployer) => {
   console.log("deploying app contracts");
 
-  await deployer.deploy(SimpleToken, "simple", "simple", 1000000);
+  await deployer.deploy(ERC20Token, "simple", "simple", 1000000);
   await deployer.deploy(ICS20Bank)
   await deployer.deploy(ICS20TransferBank, IBCHandler.address, ICS20Bank.address);
 };

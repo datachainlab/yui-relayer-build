@@ -1,7 +1,7 @@
 {
   "chain": {
     "@type": "/relayer.chains.ethereum.config.ChainConfig",
-    "chain_id": "ibc0",
+    "chain_id": "ibc1",
     "eth_chain_id": 2018,
     "rpc_addr": "http://localhost:8645",
     "hdw_mnemonic": "math razor capable expose worth grape metal sunset metal sudden usage scheme",
@@ -15,6 +15,6 @@
   },
   "prover": {
     "@type": "/relayer.provers.mock.config.ProverConfig",
-    "finality_delay": 3
+    "finality_delay": 0
   }
 }
