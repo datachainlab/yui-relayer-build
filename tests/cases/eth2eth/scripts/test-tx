@@ -32,8 +32,8 @@ PATH_JSON=${CONF_DIR}/path.json
 CHAIN_A_ID=$(jq -r '.chain."eth_chain_id"' ${CHAIN_A_JSON})
 CHAIN_B_ID=$(jq -r '.chain."eth_chain_id"' ${CHAIN_B_JSON})
 
-MNEMONIC_A=$(jq -r '.chain."hdw_mnemonic"' ${CHAIN_A_JSON})
-MNEMONIC_B=$(jq -r '.chain."hdw_mnemonic"' ${CHAIN_B_JSON})
+MNEMONIC_A=$(jq -r '.chain.signer.mnemonic' ${CHAIN_A_JSON})
+MNEMONIC_B=$(jq -r '.chain.signer.mnemonic' ${CHAIN_B_JSON})
 
 RPC_ADDRESS_A=$(jq -r '.chain."rpc_addr"' ${CHAIN_A_JSON})
 RPC_ADDRESS_B=$(jq -r '.chain."rpc_addr"' ${CHAIN_B_JSON})
