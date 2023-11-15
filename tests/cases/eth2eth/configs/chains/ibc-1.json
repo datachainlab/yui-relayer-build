@@ -4,8 +4,11 @@
     "chain_id": "ibc1",
     "eth_chain_id": 2019,
     "rpc_addr": "http://localhost:8745",
-    "hdw_mnemonic": "math razor capable expose worth grape metal sunset metal sudden usage scheme",
-    "hdw_path": "m/44'/60'/0'/0/0",
+    "signer": {
+      "@type": "/relayer.chains.ethereum.signers.hd.SignerConfig",
+      "mnemonic": "math razor capable expose worth grape metal sunset metal sudden usage scheme",
+      "path": "m/44'/60'/0'/0/0"
+    },
     "ibc_address": "0x9eBF3956EE45B2b9F1fC85FB8990ce6be52F47a6",
     "initial_send_checkpoint": 1,
     "initial_recv_checkpoint": 1,

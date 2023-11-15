@@ -33,7 +33,7 @@ CHANNEL_ID=$(jq -r '.dst."channel-id"' ${PATH_JSON})
 
 ETH_JSON=${CONF_DIR}/demo/ibc-1.json
 RPC_ADDRESS=$(jq -r '.chain."rpc_addr"' ${ETH_JSON})
-MNEMONIC=$(jq -r '.chain."hdw_mnemonic"' ${ETH_JSON})
+MNEMONIC=$(jq -r '.chain.signer.mnemonic' ${ETH_JSON})
 ETH_ADDRESS=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC}" --wallet-index=2)
 
 DENOM="samoleans"
