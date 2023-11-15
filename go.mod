@@ -8,11 +8,9 @@ replace (
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 )
 
-replace github.com/datachainlab/ethereum-ibc-relay-chain => github.com/siburu/ethereum-ibc-relay-chain v0.0.0-20231114231511-1027f755c74f
-
 require (
-	github.com/datachainlab/ethereum-ibc-relay-chain v0.2.7
-	github.com/hyperledger-labs/yui-relayer v0.4.17
+	github.com/datachainlab/ethereum-ibc-relay-chain v0.2.8
+	github.com/hyperledger-labs/yui-relayer v0.4.18
 )
 
 require (
