@@ -247,8 +247,8 @@ github.com/cyphar/filepath-securejoin v0.2.3/go.mod h1:aPGpWjXOXUn2NCNjFvBE6aRxG
 github.com/daixiang0/gci v0.3.3/go.mod h1:1Xr2bxnQbDxCqqulUOv8qpGqkgRw9RSCGGjEC2LjF8o=
 github.com/danieljoos/wincred v1.0.2 h1:zf4bhty2iLuwgjgpraD2E9UbvO+fe54XXGJbOwe23fU=
 github.com/danieljoos/wincred v1.0.2/go.mod h1:SnuYRW9lp1oJrZX/dXJqr0cPK5gYXqx3EJbmjhLdK9U=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.1.0 h1:nxw8prvS2E4Oxy/7tX6Qk7aDnOJPz9o5WzKNx5s3c2k=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.1.0/go.mod h1:prlTQq2/yMWeuGDU88YC0CXVy6g5LUi1eLY3hqag9Xk=
+github.com/datachainlab/ethereum-ibc-relay-chain v0.1.1 h1:YAfsEi+2+nF+zFbidnW3fIMnKNbGhmezEm1EUxYNyIw=
+github.com/datachainlab/ethereum-ibc-relay-chain v0.1.1/go.mod h1:prlTQq2/yMWeuGDU88YC0CXVy6g5LUi1eLY3hqag9Xk=
 github.com/datachainlab/ibc-mock-client v0.2.1 h1:xjraN6S8+kwDD4U75dsNZzmRy/E9W1KAXfKt25fu/Zw=
 github.com/datachainlab/ibc-mock-client v0.2.1/go.mod h1:NZ1+hehaxND7KXL66gDP/JAhC+CPO30vTpzjIvrxYxI=
 github.com/davecgh/go-spew v0.0.0-20161028175848-04cdfd42973b/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
