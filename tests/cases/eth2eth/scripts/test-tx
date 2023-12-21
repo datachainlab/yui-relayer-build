@@ -79,10 +79,10 @@ TIMEOUT_HEIGHT=$((CHAIN_B_HEIGHT + 1000))
 ${ICS20_CLI} ics20 transfer --rpc-address=${RPC_ADDRESS_A} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${ALICE_INDEX} --to-address=${WALLET_ADDRESS_B} --amount=${TRANSFER_AMOUNT} --denom=${DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
 
 waitRelay "sendPacket" "unrelayed-packets" "src"
-${RLY} tx relay ${PATH_NAME}
+${RLY} tx relay ${PATH_NAME} --src-seqs 1
 
 waitRelay "recvPacket" "unrelayed-acknowledgements" "dst"
-${RLY} tx acks ${PATH_NAME}
+${RLY} tx acks ${PATH_NAME} --dst-seqs 1
 
 # create chain b token address
 CHAIN_B_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
@@ -100,10 +100,10 @@ echo "!!! ibc1 bob -> ibc0 alice !!!"
 ${ICS20_CLI} ics20 transfer --rpc-address=${RPC_ADDRESS_B} --mnemonic="${MNEMONIC_B}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${BOB_INDEX} --to-address=${WALLET_ADDRESS_A} --amount=${TRANSFER_AMOUNT} --denom=${CHAIN_B_DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
 
 waitRelay "sendPacket" "unrelayed-packets" "dst"
-${RLY} tx relay ${PATH_NAME}
+${RLY} tx relay ${PATH_NAME} --dst-seqs 1
 
 waitRelay "recvPacket" "unrelayed-acknowledgements" "src"
-${RLY} tx acks ${PATH_NAME}
+${RLY} tx acks ${PATH_NAME} --src-seqs 1
 
 show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
 show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob

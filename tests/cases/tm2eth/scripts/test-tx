@@ -57,9 +57,9 @@ echo "!!! ibc0 -> ibc1 !!!"
 
 ${RLY} tx transfer ibc01 ibc0 ibc1 100samoleans ${ETH_ADDRESS}
 sleep ${TX_INTERVAL}
-${RLY} tx relay ibc01
+${RLY} tx relay ibc01 --src-seqs 1
 sleep ${TX_INTERVAL}
-${RLY} tx acks ibc01
+${RLY} tx acks ibc01 --dst-seqs 1
 sleep ${TX_INTERVAL}
 
 echo "After ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS})"
