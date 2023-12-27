@@ -1,0 +1,99 @@
+{
+  "config": {
+    "chainId": {{chainId}},
+    "homesteadBlock": 0,
+    "eip150Block": 0,
+    "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "eip155Block": 0,
+    "eip158Block": 0,
+    "byzantiumBlock": 0,
+    "constantinopleBlock": 0,
+    "petersburgBlock": 0,
+    "istanbulBlock": 0,
+    "muirGlacierBlock": 0,
+    "ramanujanBlock": 0,
+    "nielsBlock": 0,
+    "berlinBlock": 0,
+    "londonBlock": 1,
+    "mirrorSyncBlock":1,
+    "brunoBlock": 1,
+    "eulerBlock": 2,
+    "gibbsBlock": 3,
+    "moranBlock": 4,
+    "planckBlock": 5,
+    "lubanBlock": 6,
+    "platoBlock": 7,
+    "parlia": {
+      "period": 3,
+      "epoch": {{BLOCKS_PER_EPOCH}}
+    }
+  },
+ "nonce": "0x0",
+  "timestamp": "0x5e9da7ce",
+  "extraData": "{{extraData}}",
+  "gasLimit": "0x2625a00",
+  "difficulty": "0x1",
+  "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0xffffFFFfFFffffffffffffffFfFFFfffFFFfFFfE",
+  "alloc": {
+    "0xffffFFFfFFffffffffffffffFfFFFfffFFFfFFfE": {
+      "balance": "0x0"
+    },
+    "0x0000000000000000000000000000000000001000": {
+      "balance": "0x0",
+      "code": "0x{{validatorContract}}"
+    },
+    "0x0000000000000000000000000000000000001001": {
+      "balance": "0x0",
+      "code": "0x{{slashContract}}"
+    },
+    "0x0000000000000000000000000000000000001002": {
+      "balance": "0x0",
+      "code": "0x{{systemRewardContract}}"
+    },
+    "0x0000000000000000000000000000000000001003": {
+      "balance": "0x0",
+      "code": "0x{{tendermintLightClient}}"
+    },
+    "0x0000000000000000000000000000000000001004": {
+      "balance": "{{initLockedBNBOnTokenHub}}",
+      "code": "0x{{tokenHub}}"
+    },
+    "0x0000000000000000000000000000000000001005": {
+      "balance": "0x0",
+      "code": "0x{{relayerIncentivize}}"
+    },
+    "0x0000000000000000000000000000000000001006": {
+      "balance": "0x0",
+      "code": "0x{{relayerHub}}"
+    },
+    "0x0000000000000000000000000000000000001007": {
+      "balance": "0x0",
+      "code": "0x{{govHub}}"
+    },
+    "0x0000000000000000000000000000000000001008": {
+      "balance": "0x0",
+      "code": "0x{{tokenManager}}"
+    },
+    "0x0000000000000000000000000000000000002000": {
+      "balance": "0x0",
+      "code": "0x{{crossChain}}"
+    },
+    "0x0000000000000000000000000000000000002001": {
+      "balance": "0x0",
+      "code": "0x{{staking}}"
+    },
+    "0x88cb4D8F77742c24d647BEf8049D3f3C56067cDD": {
+      "balance": "0x100000000000000000000"
+    },
+    "0x42D596440775C90db8d9187b47650986E1063493": {
+      "balance": "0x1000000000000000000000"
+    }{% for v in initHolders %},
+    "{{ v.address.replace('0x', '') }}": {
+      "balance": "0x{{ v.balance }}"
+    }{% endfor %}
+  },
+  "number": "0x0",
+  "gasUsed": "0x0",
+  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+}

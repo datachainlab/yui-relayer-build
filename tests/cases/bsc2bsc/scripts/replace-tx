@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -eu
+
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+source ${SCRIPT_DIR}/util/relayer-util
+
+docker exec bsc-bsc-validator1-1-1 geth attach /gethipc --exec "miner.stop()"
+
+echo "update-clients (expect tx is pending)"
+$RLY tx update-clients $PATH_NAME || true
+
+echo "check tx is pending"
+$RLY ethereum pending show $CHAINID_TWO | jq '.maxPriorityFeePerGas' | grep "0x12a05f200"
+
+echo "replace transaction"
+$RLY ethereum pending replace $CHAINID_TWO || true
+
+echo "check gasTipCap changed"
+$RLY ethereum pending show $CHAINID_TWO | jq '.maxPriorityFeePerGas' | grep "0x165a0bc00"
+
+docker exec bsc-bsc-validator1-1-1 geth attach /gethipc --exec "miner.start()"
+
+sleep 10
+
+echo "check no tx in txpool"
+$RLY ethereum pending show $CHAINID_TWO 2>&1 | grep "no pending transaction was found"
+
+

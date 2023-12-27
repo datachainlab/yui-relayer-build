@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -eu
+
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+source ${SCRIPT_DIR}/util/relayer-util
+
+# handshake
+set -x
+$RLY tx clients $PATH_NAME
+$RLY tx update-clients $PATH_NAME
+$RLY tx connection $PATH_NAME
+$RLY tx channel $PATH_NAME
+set +x

@@ -1,0 +1,47 @@
+name: bsc2bsc@v0.4
+on: [push, pull_request]
+
+env:
+  CACHE_BIN_RELAYER_KEY: bin-relayer
+  CACHE_BIN_RELAYER_PATH: ./build/yrly
+  CACHE_DOCKER_BSC_KEY: docker-bsc
+  CACHE_DOCKER_BSC_DIR: /tmp/bsc
+
+jobs:
+  eth2eth-test:
+    name: bsc2bsc-test
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Wait for build to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha }}
+          check-regexp: '(relayer|bsc)-build'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+      - name: Restore relayer binary cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_BIN_RELAYER_PATH }}
+          key: ${{ runner.os }}-${{ env.CACHE_BIN_RELAYER_KEY }}-${{ hashFiles('relayer/**', 'go.sum') }}
+      - name: Restore BSC docker image cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_DOCKER_BSC_DIR }}
+          key: ${{ runner.os }}-${{ env.CACHE_DOCKER_BSC_KEY }}-${{ hashFiles('tests/chains/bsc/**', '!**/.git/**') }}
+      - name: Load BSC docker images
+        working-directory: ./tests/scripts
+        run: |
+          ./load_docker_images $CACHE_DOCKER_BSC_DIR bsc-rpc:latest bsc-bootstrap:latest
+      - name: Run BSC chain
+        working-directory: ./tests/chains/bsc
+        run: |
+          make bootstrap
+          make network
+          make deploy-contract
+      - name: Run Test
+        working-directory: ./tests/cases/bsc2bsc
+        run: |
+          make init
+          make replace-test

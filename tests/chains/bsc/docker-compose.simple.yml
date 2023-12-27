@@ -1,0 +1,115 @@
+version: "3.8"
+
+volumes:
+  bsc-rpc:
+  bsc-validator1-1:
+  bsc-rpc2:
+  bsc-validator2-1:
+
+services:
+  bootstrap-simple:
+    image: bsc-bootstrap:latest
+    environment: &network-env
+      BLOCKS_PER_EPOCH: 20
+      INIT_HOLDER_BALANCE: "500000000000000000000"
+      NUMS_OF_VALIDATOR: 1
+      BSC_CHAIN_ID: "9999"
+      CLUSTER_CIDR: "99.99.0.0/16"
+      NETSTATS_URL: "bscpwd@netstats:3000"
+      BOOTSTRAP_PUB_KEY: "177ae5db445a2f70db781b019aedd928f5b1528a7a43448840b022408f9a21509adcce0b37c87d59da68d47a16879cc1e95a62bbac9723f7b22f4365b2afabbe"
+      BOOTSTRAP_TCP_PORT: 30311
+      VERBOSE: 3
+    volumes:
+      - bsc-rpc:/root/storage/bsc-rpc
+      - bsc-validator1-1:/root/storage/bsc-validator1
+      - ./scripts:/root/scripts
+      - ./config:/root/config
+      - ./init-holders:/root/init-holders
+      - ./validators/bls:/root/validators/bls
+      - ./validators/keystore:/root/validators/keystore
+    command: /root/scripts/bootstrap.sh
+
+  bootstrap-simple2:
+    image: bsc-bootstrap:latest
+    environment:
+      <<: *network-env
+      CLUSTER_CIDR: "99.98.0.0/16"
+    volumes:
+      - bsc-rpc2:/root/storage/bsc-rpc
+      - bsc-validator2-1:/root/storage/bsc-validator1
+      - ./scripts:/root/scripts
+      - ./config:/root/config
+      - ./init-holders:/root/init-holders
+      - ./validators/bls:/root/validators/bls
+      - ./validators/keystore:/root/validators/keystore
+    command: /root/scripts/bootstrap.sh
+
+  bsc-rpc: # This is the bootstrap node
+    image: bsc-rpc:latest
+    ports:
+      - 8845:8545
+    environment:
+      <<: *network-env
+      NODE_ID: bsc-rpc
+    networks:
+      - bsc
+    volumes:
+      - bsc-rpc:/root/.ethereum
+      - ./scripts:/scripts
+      - ./config:/config
+    command: ash /scripts/bsc-rpc.sh
+
+  bsc-rpc2: # This is the bootstrap node
+    image: bsc-rpc:latest
+    ports:
+      - 8945:8545
+    environment:
+      <<: *network-env
+      NODE_ID: bsc-rpc2
+      CLUSTER_CIDR: "99.98.0.0/16"
+    networks:
+      - bsc2
+    volumes:
+      - bsc-rpc2:/root/.ethereum
+      - ./scripts:/scripts
+      - ./config:/config
+    command: ash /scripts/bsc-rpc.sh
+
+  bsc-validator1-1:
+    image: bsc-rpc:latest
+    environment:
+      <<: *network-env
+      NODE_ID: bsc-validator1
+      BOOTSTRAP_HOST: bsc-rpc
+    networks:
+      - bsc
+    volumes:
+      - bsc-validator1-1:/root/.ethereum
+      - ./scripts:/scripts
+    command: ash /scripts/bsc-validator.sh
+
+  bsc-validator2-1:
+    image: bsc-rpc:latest
+    environment:
+      <<: *network-env
+      CLUSTER_CIDR: "99.98.0.0/16"
+      NODE_ID: bsc-validator1
+      BOOTSTRAP_HOST: bsc-rpc2
+    networks:
+      - bsc2
+    volumes:
+      - bsc-validator2-1:/root/.ethereum
+      - ./scripts:/scripts
+    command: ash /scripts/bsc-validator.sh
+
+networks:
+  bsc:
+    ipam:
+      driver: default
+      config:
+        - subnet: 99.99.0.0/16
+  bsc2:
+    ipam:
+      driver: default
+      config:
+        - subnet: 99.98.0.0/16

@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  bsc-rpc:
+    build:
+      context: .
+      dockerfile: Dockerfile.rpc
+      args:
+        GIT_SOURCE: https://github.com/binance-chain/bsc.git
+        GIT_CHECKOUT_BRANCH: v1.2.10
+    image: bsc-rpc:latest
+  bsc-bootstrap:
+    build:
+      context: .
+      dockerfile: Dockerfile.bootstrap
+    image: bsc-bootstrap:latest
