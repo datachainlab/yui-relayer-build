@@ -11,7 +11,7 @@
     "clean": "rimraf build"
   },
   "dependencies": {
-    "@hyperledger-labs/yui-ibc-solidity": "git+https://github.com/hyperledger-labs/yui-ibc-solidity.git#v0.3.17",
+    "@hyperledger-labs/yui-ibc-solidity": "git+https://github.com/hyperledger-labs/yui-ibc-solidity.git#v0.3.20",
     "@truffle/hdwallet-provider": "1.4.1",
     "truffle": "^5.4.3",
     "truffle-contract-size": "^2.0.1"
