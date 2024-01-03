@@ -1,8 +1,9 @@
 const MockClient = artifacts.require("MockClient");
 const IBCClient = artifacts.require("IBCClient");
-const IBCConnection = artifacts.require("IBCConnection");
+const IBCConnection = artifacts.require("IBCConnectionSelfStateNoValidation");
 const IBCChannelHandshake = artifacts.require("IBCChannelHandshake");
-const IBCPacket = artifacts.require("IBCPacket");
+const IBCChannelPacketSendRecv = artifacts.require("IBCChannelPacketSendRecv");
+const IBCChannelPacketTimeout = artifacts.require("IBCChannelPacketTimeout");
 const IBCHandler = artifacts.require("OwnableIBCHandler");
 const ERC20Token = artifacts.require("ERC20Token");
 const ICS20TransferBank = artifacts.require("ICS20TransferBank");
@@ -12,8 +13,9 @@ const deployCore = async (deployer) => {
   await deployer.deploy(IBCClient);
   await deployer.deploy(IBCConnection);
   await deployer.deploy(IBCChannelHandshake);
-  await deployer.deploy(IBCPacket);
-  await deployer.deploy(IBCHandler, IBCClient.address, IBCConnection.address, IBCChannelHandshake.address, IBCPacket.address);
+  await deployer.deploy(IBCChannelPacketSendRecv);
+  await deployer.deploy(IBCChannelPacketTimeout);
+  await deployer.deploy(IBCHandler, IBCClient.address, IBCConnection.address, IBCChannelHandshake.address, IBCChannelPacketSendRecv.address, IBCChannelPacketTimeout.address);
   await deployer.deploy(MockClient, IBCHandler.address);
 };
 
