@@ -1,0 +1,33 @@
+{
+  "chain": {
+    "@type": "/relayer.chains.ethereum.config.ChainConfig",
+    "chain_id": "ibc1",
+    "eth_chain_id": 9999,
+    "rpc_addr": "http://localhost:8845",
+    "signer": {
+      "@type": "/relayer.chains.ethereum.signers.hd.SignerConfig",
+      "mnemonic": "math razor capable expose worth grape metal sunset metal sudden usage scheme",
+      "path": "m/44'/60'/0'/0/0"
+    },
+    "ibc_address": "0x727A5648832D2b317925CE043eA9b7fE04B4CD55",
+    "initial_send_checkpoint": 0,
+    "initial_recv_checkpoint": 0,
+    "enable_debug_trace": false,
+    "average_block_time_msec": 3000,
+    "max_retry_for_inclusion": 5,
+    "replaceConfig": {
+      "pendingDurationToReplace" : 1,
+      "checkInterval" : 3,
+      "gasPriceInc": "1000000000",
+      "maxGasPrice": "100000000000",
+      "gasTipCapInc": "1000000000",
+      "maxGasTipCap": "100000000000",
+      "gasFeeCapInc": "1000000000",
+      "maxGasFeeCap": "100000000000"
+    }
+  },
+  "prover": {
+    "@type": "/relayer.provers.mock.config.ProverConfig",
+    "finality_delay": 3
+  }
+}

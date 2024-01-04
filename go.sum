@@ -399,8 +399,6 @@ github.com/cucumber/common/gherkin/go/v22 v22.0.0 h1:4K8NqptbvdOrjL9DEea6HFjSpbd
 github.com/cucumber/common/messages/go/v17 v17.1.1 h1:RNqopvIFyLWnKv0LfATh34SWBhXeoFTJnSrgm9cT/Ts=
 github.com/danieljoos/wincred v1.1.2 h1:QLdCxFs1/Yl4zduvBdcHB8goaYk9RARS2SgLLRuAyr0=
 github.com/danieljoos/wincred v1.1.2/go.mod h1:GijpziifJoIBfYh+S7BbkdUTU4LfM+QnGqR5Vl2tAx0=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.2.10 h1:2bAUn9yYFQTFj0gRIbWWXgZY48FGIrAwA9gH0YQLrxM=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.2.10/go.mod h1:FDKiZNh2r8kz/KAXBG9tNDcoT6jyiUR1EfiE9W7Xjbc=
 github.com/datachainlab/ibc-mock-client v0.3.2 h1:SxBkaiuHWQ+1L085m2L35Fku3am7I6YL6B7dwurtDOM=
 github.com/datachainlab/ibc-mock-client v0.3.2/go.mod h1:FfqyF+VJKp8jlIG21lTNJJIp8RCaxSrx6vjhNkfwgBM=
 github.com/davecgh/go-spew v0.0.0-20171005155431-ecdeabc65495/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -1118,6 +1116,8 @@ github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 h1:bAn7/zixMGCfxrRTfdpNzjtPYqr8smhKouy9mxVdGPU=
 github.com/yalp/jsonpath v0.0.0-20180802001716-5cc68e5049a0/go.mod h1:/LWChgwKmvncFJFHJ7Gvn9wZArjbV5/FppcK2fKk/tI=
+github.com/yoshidan/ethereum-ibc-relay-chain v0.0.0-20231225072216-f2357c7dc5a2 h1:VPJa61QHjpG8GG5wnSqXXBEiz2E3XkaCrrFcX2tSNSc=
+github.com/yoshidan/ethereum-ibc-relay-chain v0.0.0-20231225072216-f2357c7dc5a2/go.mod h1:z2LO59ewVXH0SFmTFMO3z+YRCfAGAJoZ19bvnCX+gJM=
 github.com/yudai/gojsondiff v1.0.0/go.mod h1:AY32+k2cwILAkW1fbgxQ5mUmMiZFgLIV+FBNExI05xg=
 github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82/go.mod h1:lgjkn3NuSvDfVJdfcVVdX+jpBxNmX4rDAzaS45IcYoM=
 github.com/yudai/pp v2.0.1+incompatible/go.mod h1:PuxR/8QJ7cyCkFp/aUDS+JY727OFEZkTdatxwunjIkc=

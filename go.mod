@@ -202,3 +202,5 @@ require (
 	pgregory.net/rapid v0.5.5 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+replace github.com/datachainlab/ethereum-ibc-relay-chain => github.com/yoshidan/ethereum-ibc-relay-chain v0.0.0-20231225072216-f2357c7dc5a2

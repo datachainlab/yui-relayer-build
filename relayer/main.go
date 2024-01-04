@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/datachainlab/ethereum-ibc-relay-chain/pkg/relay/ethereum"
+	ethereum "github.com/datachainlab/ethereum-ibc-relay-chain/pkg/relay/ethereum/module"
 	"github.com/datachainlab/ethereum-ibc-relay-chain/pkg/relay/ethereum/signers/hd"
 	tendermint "github.com/hyperledger-labs/yui-relayer/chains/tendermint/module"
 	"github.com/hyperledger-labs/yui-relayer/cmd"

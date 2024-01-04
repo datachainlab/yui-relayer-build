@@ -1,0 +1,16 @@
+FROM golang:1.19-alpine
+
+ARG GIT_SOURCE
+ARG GIT_CHECKOUT_BRANCH
+
+RUN apk add --no-cache make cmake gcc musl-dev linux-headers git bash build-base libc-dev
+
+ENV CGO_CFLAGS="-O -D__BLST_PORTABLE__"
+ENV CGO_CFLAGS_ALLOW="-O -D__BLST_PORTABLE__"
+RUN echo v15
+RUN cd / && git clone --depth 1 -b ${GIT_CHECKOUT_BRANCH} ${GIT_SOURCE} \
+    && cd ./bsc && make geth
+
+RUN mv /bsc/build/bin/geth /usr/local/bin/
+
+EXPOSE 30311 30311/udp
