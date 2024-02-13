@@ -41,7 +41,7 @@ jobs:
         working-directory: ./tests/scripts
         run: |
           ./load_docker_images $CACHE_DOCKER_TENDERMINT_DIR tendermint-chain0:latest
-          ./load_docker_images $CACHE_DOCKER_ETHEREUM_DIR ethereum-ganache0:latest
+          ./load_docker_images $CACHE_DOCKER_ETHEREUM_DIR ethereum-ibc0:latest
       - name: Run Test
         working-directory: ./tests/cases/tm2eth
         run: |
