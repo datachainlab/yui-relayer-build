@@ -46,9 +46,9 @@ services:
       USE_MOCK_CLIENT: 1
 
 # Ethereum
-  ethereum-ganache0:
-    container_name: ethereum-ganache0
-    image: ethereum-ganache0:${TAG}
+  ethereum-ibc0:
+    container_name: ethereum-ibc0
+    image: ethereum-ibc0:${TAG}
     ports:
       - 8645:8545
     healthcheck:
@@ -58,9 +58,9 @@ services:
       retries: 5
     networks:
       - *network-common
-  ethereum-ganache1:
-    container_name: ethereum-ganache1
-    image: ethereum-ganache1:${TAG}
+  ethereum-ibc1:
+    container_name: ethereum-ibc1
+    image: ethereum-ibc1:${TAG}
     ports:
       - 8745:8545
     healthcheck:

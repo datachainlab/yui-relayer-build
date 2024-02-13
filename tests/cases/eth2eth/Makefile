@@ -5,7 +5,7 @@ network:
 	TAG=${DOCKER_TAG} $(DOCKER_COMPOSE) \
 		-f ../docker-compose-test.yaml \
 		up -d \
-		ethereum-ganache0 ethereum-ganache1
+		ethereum-ibc0 ethereum-ibc1
 
 .PHONY: test
 test:
