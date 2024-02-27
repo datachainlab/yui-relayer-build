@@ -5,12 +5,14 @@ go 1.20
 replace (
 	// https://github.com/cosmos/cosmos-sdk/blob/v0.47.3/go.mod#L171-L182
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
+
+	github.com/datachainlab/ethereum-ibc-relay-chain => /Users/dongri.jin/go/src/github.com/dongrie/ethereum-ibc-relay-chain
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 )
 
 require (
 	github.com/datachainlab/ethereum-ibc-relay-chain v0.2.10
-	github.com/hyperledger-labs/yui-relayer v0.4.20
+	github.com/hyperledger-labs/yui-relayer v0.4.25
 )
 
 require (
@@ -65,7 +67,7 @@ require (
 	github.com/cosmos/rosetta-sdk-go v0.10.0 // indirect
 	github.com/creachadair/taskgroup v0.4.2 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
-	github.com/datachainlab/ibc-mock-client v0.3.2 // indirect
+	github.com/datachainlab/ibc-mock-client v0.3.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deckarep/golang-set/v2 v2.1.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0 // indirect

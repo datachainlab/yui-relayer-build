@@ -1,5 +1,6 @@
 include ../../docker.mk
 
+HARDHAT ?= npx hardhat
 SCRIPT_DIR ?= $(CURDIR)/scripts
 
 NETWORK_ID0 ?= 13370
@@ -18,7 +19,7 @@ docker-images:
 
 .PHONY: deploy-contract
 deploy-contract:
-	cd contract && npm install && npm run migrate
+	cd contracts && npm install && $(HARDHAT) run ./scripts/deploy.js --network ibc0 && $(HARDHAT) run ./scripts/deploy.js --network ibc1
 
 .PHONY: up-scaffold
 up-scaffold:

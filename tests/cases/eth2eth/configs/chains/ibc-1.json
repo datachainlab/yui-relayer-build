@@ -14,7 +14,13 @@
     "initial_recv_checkpoint": 1,
     "enable_debug_trace": true,
     "average_block_time_msec": 1000,
-    "max_retry_for_inclusion": 5
+    "max_retry_for_inclusion": 5,
+    "gas_estimate_rate": {
+      "numerator": 3,
+      "denominator": 2
+    },
+    "max_gas_limit": 10000000,
+    "tx_type": "auto"
   },
   "prover": {
     "@type": "/relayer.provers.mock.config.ProverConfig",
