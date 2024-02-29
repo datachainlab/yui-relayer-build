@@ -35,5 +35,5 @@ save-contract-address:
 
 .PHONY: docker-commit
 docker-commit:
-	$(SCRIPT_DIR)/docker/commitImage.sh  $(DOCKER_REPO) $(DOCKER_TAG) ethereum-ibc0 ethereum-geth0-scaffold $(NETWORK_ID0)
-	$(SCRIPT_DIR)/docker/commitImage.sh  $(DOCKER_REPO) $(DOCKER_TAG) ethereum-ibc1 ethereum-geth1-scaffold $(NETWORK_ID1)
+	$(SCRIPT_DIR)/docker/commitImage.sh  $(DOCKER_REPO) $(DOCKER_TAG) ethereum-geth0 ethereum-geth0-scaffold $(NETWORK_ID0)
+	$(SCRIPT_DIR)/docker/commitImage.sh  $(DOCKER_REPO) $(DOCKER_TAG) ethereum-geth1 ethereum-geth1-scaffold $(NETWORK_ID1)

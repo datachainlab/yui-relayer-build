@@ -79,4 +79,4 @@ jobs:
         if: steps.cache-docker-ethereum.outputs.cache-hit != 'true'
         working-directory: ./tests/scripts
         run: |
-          ./save_docker_images $CACHE_DOCKER_ETHEREUM_DIR ethereum-ibc0:latest ethereum-ibc1:latest
+          ./save_docker_images $CACHE_DOCKER_ETHEREUM_DIR ethereum-geth0:latest ethereum-geth1:latest

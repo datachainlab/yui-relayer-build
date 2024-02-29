@@ -7,11 +7,12 @@
     "migrate:chain1": "truffle migrate --reset --network=chain1",
     "compile:ibc": "cd node_modules/@hyperledger-labs/yui-ibc-solidity && truffle compile",
     "copy:ibc": "cpx \"node_modules/@hyperledger-labs/yui-ibc-solidity/build/contracts/*.json\" build/contracts -v",
-    "postinstall": "run-s compile:ibc copy:ibc",
+    "copy:truffle-config": "cp truffle-config.js node_modules/@hyperledger-labs/yui-ibc-solidity",
+    "postinstall": "run-s copy:truffle-config compile:ibc copy:ibc",
     "clean": "rimraf build"
   },
   "dependencies": {
-    "@hyperledger-labs/yui-ibc-solidity": "git+https://github.com/hyperledger-labs/yui-ibc-solidity.git#v0.3.20",
+    "@hyperledger-labs/yui-ibc-solidity": "git+https://github.com/hyperledger-labs/yui-ibc-solidity.git#v0.3.22",
     "@truffle/hdwallet-provider": "1.4.1",
     "truffle": "^5.4.3",
     "truffle-contract-size": "^2.0.1"
