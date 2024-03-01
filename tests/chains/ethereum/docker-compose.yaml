@@ -10,7 +10,6 @@ services:
       context: ./geth
       args:
         - CHAIN_ID=2018
-        - NETWORKID=${NETWORK_ID0}
     ports:
       - 8645:8545
     networks:
@@ -27,7 +26,6 @@ services:
       context: ./geth
       args:
         - CHAIN_ID=2019
-        - NETWORKID=${NETWORK_ID1}
     ports:
       - 8745:8545
     networks:
