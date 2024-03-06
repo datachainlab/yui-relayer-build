@@ -9,8 +9,8 @@ replace (
 )
 
 require (
-	github.com/datachainlab/ethereum-ibc-relay-chain v0.2.10
-	github.com/hyperledger-labs/yui-relayer v0.4.20
+	github.com/datachainlab/ethereum-ibc-relay-chain v0.2.16
+	github.com/hyperledger-labs/yui-relayer v0.4.25
 )
 
 require (
@@ -65,7 +65,7 @@ require (
 	github.com/cosmos/rosetta-sdk-go v0.10.0 // indirect
 	github.com/creachadair/taskgroup v0.4.2 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
-	github.com/datachainlab/ibc-mock-client v0.3.2 // indirect
+	github.com/datachainlab/ibc-mock-client v0.3.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deckarep/golang-set/v2 v2.1.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0 // indirect

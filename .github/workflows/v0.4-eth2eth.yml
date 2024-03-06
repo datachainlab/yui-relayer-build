@@ -33,7 +33,7 @@ jobs:
       - name: Load Ethereum docker images
         working-directory: ./tests/scripts
         run: |
-          ./load_docker_images $CACHE_DOCKER_ETHEREUM_DIR ethereum-ganache0:latest ethereum-ganache1:latest
+          ./load_docker_images $CACHE_DOCKER_ETHEREUM_DIR ethereum-geth0:latest ethereum-geth1:latest
       - name: Run Test
         working-directory: ./tests/cases/eth2eth
         run: |
