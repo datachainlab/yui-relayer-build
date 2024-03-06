@@ -2,11 +2,7 @@
   "name": "contracts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "license": "TBD",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@hyperledger-labs/yui-ibc-solidity": "git+https://github.com/hyperledger-labs/yui-ibc-solidity.git#v0.3.26",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
