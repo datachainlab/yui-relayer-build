@@ -13,4 +13,4 @@ mkdir -p ${FIXTURES_DIR}/tendermint/ibc0
 set -x
 
 # retrieve the mnemonic from the container to the local
-${DOCKER} cp tendermint-chain0:/root/data/ibc0/key_seed.json  ${FIXTURES_DIR}/tendermint/ibc0/key_seed.json
+${DOCKER} cp tendermint-chain0-mock:/root/data/ibc0/key_seed.json  ${FIXTURES_DIR}/tendermint/ibc0/key_seed.json
