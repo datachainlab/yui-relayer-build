@@ -25,21 +25,19 @@ ICS20_BANK_ADDRESS="0x2F5703804E29F4252FA9405B8D357220d11b3bd9"
 
 DENOM=$(echo "$ERC20_TOKEN_ADDRESS" | tr '[:upper:]' '[:lower:]')
 
-CHAIN_A_JSON=${CONF_DIR}/chains/ibc-0.json
-CHAIN_B_JSON=${CONF_DIR}/chains/ibc-1.json
-PATH_JSON=${CONF_DIR}/path.json
+CONFIG_JSON=${RELAYER_CONF}/config/config.json
 
-CHAIN_A_ID=$(jq -r '.chain."eth_chain_id"' ${CHAIN_A_JSON})
-CHAIN_B_ID=$(jq -r '.chain."eth_chain_id"' ${CHAIN_B_JSON})
+CHAIN_A_ID=$(jq -r '.chains[] | select(.chain.chain_id == "ibc0").chain.eth_chain_id' ${CONFIG_JSON})
+CHAIN_B_ID=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.eth_chain_id' ${CONFIG_JSON})
 
-MNEMONIC_A=$(jq -r '.chain.signer.mnemonic' ${CHAIN_A_JSON})
-MNEMONIC_B=$(jq -r '.chain.signer.mnemonic' ${CHAIN_B_JSON})
+MNEMONIC_A=$(jq -r '.chains[] | select(.chain.chain_id == "ibc0").chain.signer.mnemonic' ${CONFIG_JSON})
+MNEMONIC_B=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.signer.mnemonic' ${CONFIG_JSON})
 
-RPC_ADDRESS_A=$(jq -r '.chain."rpc_addr"' ${CHAIN_A_JSON})
-RPC_ADDRESS_B=$(jq -r '.chain."rpc_addr"' ${CHAIN_B_JSON})
+RPC_ADDRESS_A=$(jq -r '.chains[] | select(.chain.chain_id == "ibc0").chain.rpc_addr' ${CONFIG_JSON})
+RPC_ADDRESS_B=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.rpc_addr' ${CONFIG_JSON})
 
-PORT_ID=$(jq -r '.dst."port-id"' ${PATH_JSON})
-CHANNEL_ID=$(jq -r '.dst."channel-id"' ${PATH_JSON})
+PORT_ID=$(jq -r '.paths.ibc01.dst."port-id"' ${CONFIG_JSON})
+CHANNEL_ID=$(jq -r '.paths.ibc01.dst."channel-id"' ${CONFIG_JSON})
 
 WALLET_ADDRESS_A=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC_A}" --wallet-index=1)
 WALLET_ADDRESS_B=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC_B}" --wallet-index=2)

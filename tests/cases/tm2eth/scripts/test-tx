@@ -3,7 +3,8 @@
 set -eux
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-CONF_DIR=${SCRIPT_DIR}/../configs
+
+RELAYER_CONF="$HOME/.yui-relayer"
 RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
 RLY="${RLY_BINARY} --debug"
 
@@ -27,17 +28,14 @@ TM_ADDRESS=$(${RLY} tendermint keys show ibc0 testkey)
 
 ICS20_BANK_ADDRESS="0x2F5703804E29F4252FA9405B8D357220d11b3bd9"
 
-PATH_JSON=${CONF_DIR}/path.json
-PORT_ID=$(jq -r '.dst."port-id"' ${PATH_JSON})
-CHANNEL_ID=$(jq -r '.dst."channel-id"' ${PATH_JSON})
-
-ETH_JSON=${CONF_DIR}/demo/ibc-1.json
-RPC_ADDRESS=$(jq -r '.chain."rpc_addr"' ${ETH_JSON})
-MNEMONIC=$(jq -r '.chain.signer.mnemonic' ${ETH_JSON})
+CONFIG_JSON=${RELAYER_CONF}/config/config.json
+PORT_ID=$(jq -r '.paths.ibc01.dst."port-id"' ${CONFIG_JSON})
+CHANNEL_ID=$(jq -r '.paths.ibc01.dst."channel-id"' ${CONFIG_JSON})
+RPC_ADDRESS=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.rpc_addr' ${CONFIG_JSON})
+MNEMONIC=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.signer.mnemonic' ${CONFIG_JSON})
 ETH_ADDRESS=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC}" --wallet-index=2)
 
 DENOM="samoleans"
-
 ETH_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
 
 # ethereum balance
