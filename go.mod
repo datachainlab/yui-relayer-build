@@ -10,7 +10,7 @@ replace (
 
 require (
 	github.com/datachainlab/ethereum-ibc-relay-chain v0.3.1
-	github.com/hyperledger-labs/yui-relayer v0.5.1
+	github.com/hyperledger-labs/yui-relayer v0.5.3
 )
 
 require (
