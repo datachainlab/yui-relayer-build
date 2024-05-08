@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -eux
+
+DOCKER=docker
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
+
+# Setup test fixtures
+
+set +x
+rm -rf ${FIXTURES_DIR}
+mkdir -p ${FIXTURES_DIR}/ethereum/ibc0
+mkdir -p ${FIXTURES_DIR}/ethereum/ibc1
+set -x
+
+# retrieve the abi from the container to the local
+${DOCKER} cp ethereum-geth0:/root/abis ${FIXTURES_DIR}/ethereum/ibc0/abis
+${DOCKER} cp ethereum-geth1:/root/abis ${FIXTURES_DIR}/ethereum/ibc1/abis

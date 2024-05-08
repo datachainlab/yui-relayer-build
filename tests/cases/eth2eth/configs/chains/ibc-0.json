@@ -21,7 +21,8 @@
     },
     "max_gas_limit": 10000000,
     "tx_type": "auto",
-    "blocks_per_event_query": 1000
+    "blocks_per_event_query": 1000,
+    "abi_paths": ["fixtures/ethereum/ibc0/abis"]
   },
   "prover": {
     "@type": "/relayer.provers.mock.config.ProverConfig",

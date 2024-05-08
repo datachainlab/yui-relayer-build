@@ -9,6 +9,7 @@ network:
 
 .PHONY: test
 test:
+	./scripts/fixture
 	./scripts/init-rly
 	./scripts/handshake
 	./scripts/test-tx

@@ -7,16 +7,14 @@ source ${SCRIPT_DIR}/util/relayer-util
 
 ICS20_CLI="ethereum-ics20-cli"
 
-TMP_DIR=/tmp
 if ! which ${ICS20_CLI} > /dev/null 2>&1; then
-  if [ ! -d "${TMP_DIR}" ]; then
-    mkdir -p ${TMP_DIR}
-  fi
+  TMP_DIR=`mktemp -d`
   git clone https://github.com/datachainlab/ethereum-ics20-cli.git ${TMP_DIR}/ethereum-ics20-cli
-  cd ${TMP_DIR}/ethereum-ics20-cli
+  pushd ${TMP_DIR}/ethereum-ics20-cli
   git checkout v0.0.5
   go install
   export PATH=$PATH:$(go env GOPATH)/bin
+  popd
 fi
 
 ERC20_TOKEN_ADDRESS="0xff77D90D6aA12db33d3Ba50A34fB25401f6e4c4F"
