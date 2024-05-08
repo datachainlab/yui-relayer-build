@@ -1,3 +1,17 @@
+function saveAddress(contractName, contract) {
+  const fs = require("fs");
+  const path = require("path");
+
+  const dirpath = path.join("addresses", network.config.chainId.toString());
+  if (!fs.existsSync(dirpath)) {
+    fs.mkdirSync(dirpath, {recursive: true});
+  }
+
+  const filepath = path.join(dirpath, contractName);
+  fs.writeFileSync(filepath, contract.target);
+
+  console.log(`${contractName} address:`, contract.target);
+}
 
 async function deploy(deployer, contractName, args = []) {
   const factory = await hre.ethers.getContractFactory(contractName);
@@ -43,19 +57,19 @@ async function main() {
   console.log("Account balance:", (await hre.ethers.provider.getBalance(deployer.getAddress())).toString());
 
   const ibcHandler = await deployIBC(deployer);
-  console.log("IBCHandler address:", ibcHandler.target);
+  saveAddress("IBCHandler", ibcHandler);
 
   const erc20token = await deploy(deployer, "ERC20Token", ["simple", "simple", 1000000]);
-  console.log("ERC20Token address:", erc20token.target);
+  saveAddress("ERC20Token", erc20token);
 
   const ics20bank = await deploy(deployer, "ICS20Bank");
-  console.log("ICS20Bank address:", ics20bank.target);
+  saveAddress("ICS20Bank", ics20bank);
 
   const ics20transferbank = await deploy(deployer, "ICS20TransferBank", [ibcHandler.target, ics20bank.target]);
-  console.log("ICS20TransferBank address:", ics20transferbank.target);
+  saveAddress("ICS20TransferBank", ics20transferbank);
 
   const mockClient = await deploy(deployer, "MockClient", [ibcHandler.target]);
-  console.log("MockClient address:", mockClient.target);
+  saveAddress("MockClient", mockClient);
 
   await ibcHandler.bindPort("transfer", ics20transferbank.target);
   await ibcHandler.registerClient("mock-client", mockClient.target);
