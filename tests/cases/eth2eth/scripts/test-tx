@@ -3,6 +3,8 @@
 set -eu
 
 SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
+
 source ${SCRIPT_DIR}/util/relayer-util
 
 ICS20_CLI="ethereum-ics20-cli"
@@ -17,11 +19,15 @@ if ! which ${ICS20_CLI} > /dev/null 2>&1; then
   popd
 fi
 
-ERC20_TOKEN_ADDRESS="0xff77D90D6aA12db33d3Ba50A34fB25401f6e4c4F"
-ICS20_TRANSFER_BANK_ADDRESS="0xaE1C9125BbcF63bf51294C4D15CBD472782E330D"
-ICS20_BANK_ADDRESS="0x2F5703804E29F4252FA9405B8D357220d11b3bd9"
+ADDRESSES_DIR_A="${FIXTURES_DIR}/ethereum/ibc0/addresses"
+ADDRESSES_DIR_B="${FIXTURES_DIR}/ethereum/ibc1/addresses"
 
-DENOM=$(echo "$ERC20_TOKEN_ADDRESS" | tr '[:upper:]' '[:lower:]')
+ERC20_TOKEN_ADDRESS_A=`cat ${ADDRESSES_DIR_A}/ERC20Token`
+#ERC20_TOKEN_ADDRESS_B=`cat ${ADDRESSES_DIR_B}/ERC20Token`
+ICS20_TRANSFER_BANK_ADDRESS_A=`cat ${ADDRESSES_DIR_A}/ICS20TransferBank`
+ICS20_TRANSFER_BANK_ADDRESS_B=`cat ${ADDRESSES_DIR_B}/ICS20TransferBank`
+ICS20_BANK_ADDRESS_A=`cat ${ADDRESSES_DIR_A}/ICS20Bank`
+ICS20_BANK_ADDRESS_B=`cat ${ADDRESSES_DIR_B}/ICS20Bank`
 
 CONFIG_JSON=${RELAYER_CONF}/config/config.json
 
@@ -40,20 +46,24 @@ CHANNEL_ID=$(jq -r '.paths.ibc01.dst."channel-id"' ${CONFIG_JSON})
 WALLET_ADDRESS_A=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC_A}" --wallet-index=1)
 WALLET_ADDRESS_B=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC_B}" --wallet-index=2)
 
+DENOM=$(echo "$ERC20_TOKEN_ADDRESS_A" | tr '[:upper:]' '[:lower:]')
+CHAIN_B_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
+
 show_balance() {
   state=$1
   chain=$2
-  user_wallet=$3
-  denom=$4
-  user_name=$5
-  balance=$(${ICS20_CLI} ics20 balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --denom=${denom})
+  bank=$3
+  user_wallet=$4
+  denom=$5
+  user_name=$6
+  balance=$(${ICS20_CLI} ics20 balance --rpc-address=${chain} --ics20-bank-address=${bank} --wallet-address=${user_wallet} --denom=${denom})
   echo "${state} ${chain} balance of ${user_name}: $balance"
 }
 
-show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
-show_balance Before ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob
-show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${DENOM} alice
-show_balance Before ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${DENOM} bob
+show_balance Before ${RPC_ADDRESS_A} ${ICS20_BANK_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
+show_balance Before ${RPC_ADDRESS_A} ${ICS20_BANK_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob
+show_balance Before ${RPC_ADDRESS_B} ${ICS20_BANK_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
+show_balance Before ${RPC_ADDRESS_B} ${ICS20_BANK_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
 
 DEPLOYER_INDEX=0
 TRANSFER_AMOUNT=10
@@ -72,7 +82,7 @@ CHAIN_B_HEIGHT=$(${ICS20_CLI} chain height --rpc-address=${RPC_ADDRESS_B})
 TIMEOUT_HEIGHT=$((CHAIN_B_HEIGHT + 1000))
 
 # transfer token from alice (ibc0) to bob (ibc1)
-${ICS20_CLI} ics20 transfer --rpc-address=${RPC_ADDRESS_A} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${ALICE_INDEX} --to-address=${WALLET_ADDRESS_B} --amount=${TRANSFER_AMOUNT} --denom=${DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
+${ICS20_CLI} ics20 transfer --rpc-address=${RPC_ADDRESS_A} --mnemonic="${MNEMONIC_A}" --ics20-bank-address=${ICS20_BANK_ADDRESS_A} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS_A} --from-index=${ALICE_INDEX} --to-address=${WALLET_ADDRESS_B} --amount=${TRANSFER_AMOUNT} --denom=${DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
 
 waitRelay "sendPacket" "unrelayed-packets" "src"
 ${RLY} tx relay ${PATH_NAME} --src-seqs 1
@@ -80,20 +90,17 @@ ${RLY} tx relay ${PATH_NAME} --src-seqs 1
 waitRelay "recvPacket" "unrelayed-acknowledgements" "dst"
 ${RLY} tx acks ${PATH_NAME} --dst-seqs 1
 
-# create chain b token address
-CHAIN_B_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
-
-show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
-show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob
-show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
-show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
+show_balance After ${RPC_ADDRESS_A} ${ICS20_BANK_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
+show_balance After ${RPC_ADDRESS_A} ${ICS20_BANK_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob
+show_balance After ${RPC_ADDRESS_B} ${ICS20_BANK_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
+show_balance After ${RPC_ADDRESS_B} ${ICS20_BANK_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
 
 BOB_INDEX=2
 
 echo "!!! ibc1 bob -> ibc0 alice !!!"
 
 # transfer token from bob (ibc1) to alice (ibc0)
-${ICS20_CLI} ics20 transfer --rpc-address=${RPC_ADDRESS_B} --mnemonic="${MNEMONIC_B}" --ics20-bank-address=${ICS20_BANK_ADDRESS} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS} --from-index=${BOB_INDEX} --to-address=${WALLET_ADDRESS_A} --amount=${TRANSFER_AMOUNT} --denom=${CHAIN_B_DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
+${ICS20_CLI} ics20 transfer --rpc-address=${RPC_ADDRESS_B} --mnemonic="${MNEMONIC_B}" --ics20-bank-address=${ICS20_BANK_ADDRESS_B} --ics20-transfer-bank-address=${ICS20_TRANSFER_BANK_ADDRESS_B} --from-index=${BOB_INDEX} --to-address=${WALLET_ADDRESS_A} --amount=${TRANSFER_AMOUNT} --denom=${CHAIN_B_DENOM} --port-id=${PORT_ID} --channel-id=${CHANNEL_ID} --timeout-height=${TIMEOUT_HEIGHT}
 
 waitRelay "sendPacket" "unrelayed-packets" "dst"
 ${RLY} tx relay ${PATH_NAME} --dst-seqs 1
@@ -101,7 +108,7 @@ ${RLY} tx relay ${PATH_NAME} --dst-seqs 1
 waitRelay "recvPacket" "unrelayed-acknowledgements" "src"
 ${RLY} tx acks ${PATH_NAME} --src-seqs 1
 
-show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
-show_balance After ${RPC_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob
-show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
-show_balance After ${RPC_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
+show_balance After ${RPC_ADDRESS_A} ${ICS20_BANK_ADDRESS_A} ${WALLET_ADDRESS_A} ${DENOM} alice
+show_balance After ${RPC_ADDRESS_A} ${ICS20_BANK_ADDRESS_A} ${WALLET_ADDRESS_B} ${DENOM} bob
+show_balance After ${RPC_ADDRESS_B} ${ICS20_BANK_ADDRESS_B} ${WALLET_ADDRESS_A} ${CHAIN_B_DENOM} alice
+show_balance After ${RPC_ADDRESS_B} ${ICS20_BANK_ADDRESS_B} ${WALLET_ADDRESS_B} ${CHAIN_B_DENOM} bob
