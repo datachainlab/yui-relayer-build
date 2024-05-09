@@ -18,14 +18,14 @@ module.exports = {
   },
   networks: {
     ibc0: {
-      url: "http://127.0.0.1:8645",
+      url: "http://geth0-scaffold:8545",
       accounts: {
         mnemonic: mnemonic,
       },
       chainId: 2018,
     },
     ibc1: {
-      url: "http://127.0.0.1:8745",
+      url: "http://geth1-scaffold:8545",
       accounts: {
         mnemonic: mnemonic,
       },

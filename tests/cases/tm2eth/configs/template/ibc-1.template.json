@@ -1,7 +1,7 @@
 {
   "chain": {
     "@type": "/relayer.chains.ethereum.config.ChainConfig",
-    "chain_id": "ibc0",
+    "chain_id": "ibc1",
     "eth_chain_id": 2018,
     "rpc_addr": "http://localhost:8645",
     "signer": {
@@ -9,7 +9,7 @@
       "mnemonic": "math razor capable expose worth grape metal sunset metal sudden usage scheme",
       "path": "m/44'/60'/0'/0/0"
     },
-    "ibc_address": "0x727A5648832D2b317925CE043eA9b7fE04B4CD55",
+    "ibc_address": "PLACE_HOLDER",
     "initial_send_checkpoint": 1,
     "initial_recv_checkpoint": 1,
     "enable_debug_trace": true,
@@ -21,10 +21,13 @@
     },
     "max_gas_limit": 10000000,
     "tx_type": "auto",
-    "blocks_per_event_query": 1000
+    "blocks_per_event_query": 1000,
+    "abi_paths": [
+      "fixtures/ethereum/ibc1/abis"
+    ]
   },
   "prover": {
     "@type": "/relayer.provers.mock.config.ProverConfig",
-    "finality_delay": 3
+    "finality_delay": 0
   }
 }

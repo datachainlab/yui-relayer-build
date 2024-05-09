@@ -4,13 +4,23 @@ set -eux
 DOCKER=docker
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
+CONF_DIR=${SCRIPT_DIR}/../configs
 
 # Setup test fixtures
 
 set +x
 rm -rf ${FIXTURES_DIR}
 mkdir -p ${FIXTURES_DIR}/tendermint/ibc0
+mkdir -p ${FIXTURES_DIR}/ethereum/ibc1
 set -x
 
 # retrieve the mnemonic from the container to the local
-${DOCKER} cp tendermint-chain0:/root/data/ibc0/key_seed.json  ${FIXTURES_DIR}/tendermint/ibc0/key_seed.json
+${DOCKER} cp tendermint-chain0-mock:/root/data/ibc0/key_seed.json  ${FIXTURES_DIR}/tendermint/ibc0/key_seed.json
+
+# retrieve the contract information from the container to the local
+${DOCKER} cp ethereum-geth0:/root/abis ${FIXTURES_DIR}/ethereum/ibc1/abis
+${DOCKER} cp ethereum-geth0:/root/addresses ${FIXTURES_DIR}/ethereum/ibc1/addresses
+
+# assign the contract address to ChainConfig
+IBC_HANDLER_ADDRESS=`cat ${FIXTURES_DIR}/ethereum/ibc1/addresses/IBCHandler`
+jq ".chain.ibc_address |= \"$IBC_HANDLER_ADDRESS\"" < "$CONF_DIR/template/ibc-1.template.json" > "$CONF_DIR/demo/ibc-1.json"

@@ -1,4 +1,3 @@
-version: '3.5'
 networks:
   ethereum-scaffold:
     name: &network-common ethereum-scaffold
@@ -31,3 +30,10 @@ services:
     networks:
       - *network-common
     healthcheck: *healthcheck-geth
+  contracts:
+    image: "node:18"
+    volumes:
+      - "./contracts:/workdir"
+    working_dir: "/workdir"
+    networks:
+      - *network-common

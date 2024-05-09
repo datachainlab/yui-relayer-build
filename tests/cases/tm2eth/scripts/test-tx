@@ -3,55 +3,53 @@
 set -eux
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-CONF_DIR=${SCRIPT_DIR}/../configs
+
+RELAYER_CONF="$HOME/.yui-relayer"
 RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
 RLY="${RLY_BINARY} --debug"
+FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
 
 # ics20-cli
 ICS20_CLI="ethereum-ics20-cli"
-TMP_DIR=/tmp
 if ! which ${ICS20_CLI} > /dev/null 2>&1; then
-  if [ ! -d "${TMP_DIR}" ]; then
-    mkdir -p ${TMP_DIR}
-  fi
+  TMP_DIR=`mktemp -d`
   git clone https://github.com/datachainlab/ethereum-ics20-cli.git ${TMP_DIR}/ethereum-ics20-cli
-  cd ${TMP_DIR}/ethereum-ics20-cli
+  pushd ${TMP_DIR}/ethereum-ics20-cli
   git checkout v0.0.4
   go install
   export PATH=$PATH:$(go env GOPATH)/bin
+  popd
 fi
 
 TX_INTERVAL=3
 
 TM_ADDRESS=$(${RLY} tendermint keys show ibc0 testkey)
 
-ICS20_BANK_ADDRESS="0xaa43d337145E8930d01cb4E60Abf6595C692921E"
+ICS20_BANK_ADDRESS=`cat ${FIXTURES_DIR}/ethereum/ibc1/addresses/ICS20Bank`
 
-PATH_JSON=${CONF_DIR}/path.json
-PORT_ID=$(jq -r '.dst."port-id"' ${PATH_JSON})
-CHANNEL_ID=$(jq -r '.dst."channel-id"' ${PATH_JSON})
-
-ETH_JSON=${CONF_DIR}/demo/ibc-1.json
-RPC_ADDRESS=$(jq -r '.chain."rpc_addr"' ${ETH_JSON})
-MNEMONIC=$(jq -r '.chain.signer.mnemonic' ${ETH_JSON})
+CONFIG_JSON=${RELAYER_CONF}/config/config.json
+PORT_ID=$(jq -r '.paths.ibc01.dst."port-id"' ${CONFIG_JSON})
+CHANNEL_ID=$(jq -r '.paths.ibc01.dst."channel-id"' ${CONFIG_JSON})
+RPC_ADDRESS=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.rpc_addr' ${CONFIG_JSON})
+MNEMONIC=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.signer.mnemonic' ${CONFIG_JSON})
 ETH_ADDRESS=$(${ICS20_CLI} wallet address --mnemonic="${MNEMONIC}" --wallet-index=2)
 
 DENOM="samoleans"
-
 ETH_DENOM="${PORT_ID}/${CHANNEL_ID}/${DENOM}"
 
 # ethereum balance
 show_balance() {
   state=$1
   chain=$2
-  user_wallet=$3
-  denom=$4
-  balance=$(${ICS20_CLI} ics20 balance --rpc-address=${chain} --ics20-bank-address=${ICS20_BANK_ADDRESS} --wallet-address=${user_wallet} --denom=${denom})
+  bank=$3
+  user_wallet=$4
+  denom=$5
+  balance=$(${ICS20_CLI} ics20 balance --rpc-address=${chain} --ics20-bank-address=${bank} --wallet-address=${user_wallet} --denom=${denom})
   echo "${state} ${chain} balance $balance"
 }
 
 echo "Before ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS})"
-show_balance Before ${RPC_ADDRESS} ${ETH_ADDRESS} ${ETH_DENOM}
+show_balance Before ${RPC_ADDRESS} ${ICS20_BANK_ADDRESS} ${ETH_ADDRESS} ${ETH_DENOM}
 
 echo "!!! ibc0 -> ibc1 !!!"
 
@@ -63,4 +61,4 @@ ${RLY} tx acks ibc01 --dst-seqs 1
 sleep ${TX_INTERVAL}
 
 echo "After ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS})"
-show_balance After ${RPC_ADDRESS} ${ETH_ADDRESS} ${ETH_DENOM}
+show_balance After ${RPC_ADDRESS} ${ICS20_BANK_ADDRESS} ${ETH_ADDRESS} ${ETH_DENOM}
