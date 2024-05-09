@@ -6,19 +6,39 @@ In addition, the yui-relayer version corresponds to the [ibc-go](https://github.
 
 ## Supported combinations
 
+### v0.5
+
+#### Tendermint
+
+| counterparty | e2e-test                                                                                                                                                                                                                | directory                                                                             |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| Ethereum     | [![tm2eth@v0.5](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.5-tm2eth.yml/badge.svg?branch=v0.5)](https://github.com/datachainlab/yui-relayer-build/blob/v0.5/.github/workflows/v0.5-tm2eth.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.5/tests/cases/tm2eth) |
+| Tendermint   | [![tm2tm@v0.5](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.5-tm2tm.yml/badge.svg?branch=v0.5)](https://github.com/datachainlab/yui-relayer-build/blob/v0.5/.github/workflows/v0.5-tm2tm.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.5/tests/cases/tm2tm) |
+
+#### Ethereum
+
+| counterparty | e2e-test                                                                                                                                                                                                                | directory                                                                             |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| Ethereum     | [![eth2eth@v0.5](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.5-eth2eth.yml/badge.svg?branch=v0.5)](https://github.com/datachainlab/yui-relayer-build/blob/v0.5/.github/workflows/v0.5-eth2eth.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.5/tests/cases/eth2eth) |
+| Tendermint   | [![tm2eth@v0.5](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.5-tm2eth.yml/badge.svg?branch=v0.5)](https://github.com/datachainlab/yui-relayer-build/blob/v0.5/.github/workflows/v0.5-tm2eth.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.5/tests/cases/tm2eth) |
+
+
 ### v0.4
 
 #### Tendermint
 
 | counterparty | e2e-test                                                                                                                                                                                                                | directory                                                                             |
 |--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| Ethereum     | [![tm2eth@v0.4](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.4-tm2eth.yml/badge.svg?branch=v0.4)](https://github.com/datachainlab/yui-relayer-build/blob/v0.4/.github/workflows/v0.4-tm2eth.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.4/tests/cases/tm2eth) |
 | Tendermint   | [![tm2tm@v0.4](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.4-tm2tm.yml/badge.svg?branch=v0.4)](https://github.com/datachainlab/yui-relayer-build/blob/v0.4/.github/workflows/v0.4-tm2tm.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.4/tests/cases/tm2tm) |
 
 #### Ethereum
 
 | counterparty | e2e-test                                                                                                                                                                                                                | directory                                                                             |
 |--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
-| Ethereum   | [![eth2eth@v0.4](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.4-eth2eth.yml/badge.svg?branch=v0.4)](https://github.com/datachainlab/yui-relayer-build/blob/v0.4/.github/workflows/v0.4-eth2eth.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.4/tests/cases/eth2eth) |
+| Ethereum     | [![eth2eth@v0.4](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.4-eth2eth.yml/badge.svg?branch=v0.4)](https://github.com/datachainlab/yui-relayer-build/blob/v0.4/.github/workflows/v0.4-eth2eth.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.4/tests/cases/eth2eth) |
+| Tendermint   | [![tm2eth@v0.4](https://github.com/datachainlab/yui-relayer-build/actions/workflows/v0.4-tm2eth.yml/badge.svg?branch=v0.4)](https://github.com/datachainlab/yui-relayer-build/blob/v0.4/.github/workflows/v0.4-tm2eth.yml) | [Link](https://github.com/datachainlab/yui-relayer-build/tree/v0.4/tests/cases/tm2eth) |
+
 
 ### v0.3
 
