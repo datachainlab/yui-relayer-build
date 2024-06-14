@@ -10,6 +10,7 @@
       "path": "m/44'/60'/0'/0/0"
     },
     "ibc_address": "PLACE_HOLDER",
+    "multicall3_address": "PLACE_HOLDER",
     "initial_send_checkpoint": 1,
     "initial_recv_checkpoint": 1,
     "enable_debug_trace": true,

@@ -22,8 +22,12 @@ ${DOCKER} cp ethereum-geth0:/root/addresses ${FIXTURES_DIR}/ethereum/ibc0/addres
 ${DOCKER} cp ethereum-geth1:/root/addresses ${FIXTURES_DIR}/ethereum/ibc1/addresses
 
 # assign the contract address to ChainConfig
-IBC_HANDLER_ADDRESS_A=`cat ${FIXTURES_DIR}/ethereum/ibc0/addresses/IBCHandler`
-IBC_HANDLER_ADDRESS_B=`cat ${FIXTURES_DIR}/ethereum/ibc1/addresses/IBCHandler`
 mkdir -p "$CONF_DIR/chains"
-jq ".chain.ibc_address |= \"$IBC_HANDLER_ADDRESS_A\"" < "$CONF_DIR/template/ibc-0.template.json" > "$CONF_DIR/chains/ibc-0.json"
-jq ".chain.ibc_address |= \"$IBC_HANDLER_ADDRESS_B\"" < "$CONF_DIR/template/ibc-1.template.json" > "$CONF_DIR/chains/ibc-1.json"
+for id in 0 1; do
+  IBC_HANDLER_ADDRESS=`cat ${FIXTURES_DIR}/ethereum/ibc${id}/addresses/IBCHandler`
+  MULTICALL3_ADDRESS=`cat ${FIXTURES_DIR}/ethereum/ibc${id}/addresses/Multicall3`
+  cat "$CONF_DIR/template/ibc-${id}.template.json" \
+    | jq ".chain.ibc_address |= \"$IBC_HANDLER_ADDRESS\"" \
+    | jq ".chain.multicall3_address |= \"$MULTICALL3_ADDRESS\"" \
+    > "$CONF_DIR/chains/ibc-${id}.json"
+done

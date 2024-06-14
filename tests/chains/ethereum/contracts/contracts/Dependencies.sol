@@ -21,3 +21,5 @@ import {MockClient} from "@hyperledger-labs/yui-ibc-solidity/contracts/clients/M
 import {ERC20Token} from "@hyperledger-labs/yui-ibc-solidity/contracts/apps/20-transfer/ERC20Token.sol";
 import {ICS20Bank} from "@hyperledger-labs/yui-ibc-solidity/contracts/apps/20-transfer/ICS20Bank.sol";
 import {ICS20TransferBank} from "@hyperledger-labs/yui-ibc-solidity/contracts/apps/20-transfer/ICS20TransferBank.sol";
+
+import {Multicall3} from "./Multicall3.sol";
