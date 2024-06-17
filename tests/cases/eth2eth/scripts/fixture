@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eux
 
+ARG1=$1
+
 DOCKER=docker
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
@@ -26,8 +28,15 @@ mkdir -p "$CONF_DIR/chains"
 for id in 0 1; do
   IBC_HANDLER_ADDRESS=`cat ${FIXTURES_DIR}/ethereum/ibc${id}/addresses/IBCHandler`
   MULTICALL3_ADDRESS=`cat ${FIXTURES_DIR}/ethereum/ibc${id}/addresses/Multicall3`
-  cat "$CONF_DIR/template/ibc-${id}.template.json" \
-    | jq ".chain.ibc_address |= \"$IBC_HANDLER_ADDRESS\"" \
-    | jq ".chain.multicall3_address |= \"$MULTICALL3_ADDRESS\"" \
-    > "$CONF_DIR/chains/ibc-${id}.json"
+  if [ "$ARG1" = "multi" ]; then
+    cat "$CONF_DIR/template/ibc-${id}.template.json" \
+      | jq ".chain.ibc_address |= \"$IBC_HANDLER_ADDRESS\"" \
+      | jq ".chain.multicall3_address |= \"$MULTICALL3_ADDRESS\"" \
+      > "$CONF_DIR/chains/ibc-${id}.json"
+  else
+    cat "$CONF_DIR/template/ibc-${id}.template.json" \
+      | jq ".chain.ibc_address |= \"$IBC_HANDLER_ADDRESS\"" \
+      | jq ".chain.multicall3_address |= null" \
+      > "$CONF_DIR/chains/ibc-${id}.json"
+  fi
 done
