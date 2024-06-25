@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/datachainlab/ethereum-ibc-relay-chain/pkg/relay/ethereum"
-	"github.com/datachainlab/ethereum-ibc-relay-chain/pkg/relay/ethereum/signers/hd"
+	"github.com/datachainlab/ibc-hd-signer/pkg/hd"
 	tendermint "github.com/hyperledger-labs/yui-relayer/chains/tendermint/module"
 	"github.com/hyperledger-labs/yui-relayer/cmd"
 	mock "github.com/hyperledger-labs/yui-relayer/provers/mock/module"
