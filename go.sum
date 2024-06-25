@@ -413,8 +413,8 @@ github.com/crate-crypto/go-kzg-4844 v0.7.0 h1:C0vgZRk4q4EZ/JgPfzuSoxdCq3C3mOZMBS
 github.com/crate-crypto/go-kzg-4844 v0.7.0/go.mod h1:1kMhvPgI0Ky3yIa+9lFySEBUBXkYxeOi8ZF1sYioxhc=
 github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7DoTY=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
-github.com/dai1975/ethereum-ibc-relay-chain v0.0.0-20240617060830-56cdf5cf0fef h1:Y+7I6f/217zfGCJogtOLWbz9s6EBPU2RukpTuL6ZQyc=
-github.com/dai1975/ethereum-ibc-relay-chain v0.0.0-20240617060830-56cdf5cf0fef/go.mod h1:PdSsegkRJiMWVGq+afDtXKRKg4p8hnmR1Yj5BgXkit0=
+github.com/dai1975/ethereum-ibc-relay-chain v0.0.0-20240625063721-f00f00e815bb h1:hbMcoWQSK9doZ0/W2ScS35dHXXwMVdEUql3ecIQRZDc=
+github.com/dai1975/ethereum-ibc-relay-chain v0.0.0-20240625063721-f00f00e815bb/go.mod h1:PdSsegkRJiMWVGq+afDtXKRKg4p8hnmR1Yj5BgXkit0=
 github.com/danieljoos/wincred v1.1.2 h1:QLdCxFs1/Yl4zduvBdcHB8goaYk9RARS2SgLLRuAyr0=
 github.com/danieljoos/wincred v1.1.2/go.mod h1:GijpziifJoIBfYh+S7BbkdUTU4LfM+QnGqR5Vl2tAx0=
 github.com/datachainlab/ibc-mock-client v0.4.1 h1:FQfyFOodgnchCIicpS7Vzji3yxXDe4Jl5hmE5Vz7M1s=
