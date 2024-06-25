@@ -15,7 +15,7 @@ docker-images:
 
 .PHONY: deploy-contract
 deploy-contract:
-	$(DOCKER_COMPOSE) run contracts sh -c 'npm install && npx hardhat run ./scripts/deploy.js --network ibc0 && npx hardhat run ./scripts/deploy.js --network ibc1'
+	$(DOCKER_COMPOSE) run contracts sh -c 'npm install &&  npx hardhat run ./scripts/deploy.js --network ibc0 && npx hardhat run ./scripts/deploy.js --network ibc1'
 
 .PHONY: extract-abi
 extract-abi:

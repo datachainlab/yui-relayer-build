@@ -9,7 +9,19 @@ network:
 
 .PHONY: test
 test:
-	./scripts/fixture
+	$(MAKE) test-single
+	$(MAKE) test-multi
+
+.PHONY: test-multi
+test-multi:
+	./scripts/fixture multi
+	./scripts/init-rly
+	./scripts/handshake
+	./scripts/test-tx
+
+.PHONY: test-single
+test-single:
+	./scripts/fixture single
 	./scripts/init-rly
 	./scripts/handshake
 	./scripts/test-tx
