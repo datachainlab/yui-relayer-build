@@ -5,7 +5,7 @@
     "eth_chain_id": 2018,
     "rpc_addr": "http://localhost:8645",
     "signer": {
-      "@type": "/relayer.chains.ethereum.signers.hd.SignerConfig",
+      "@type": "/relayer.signers.hd.SignerConfig",
       "mnemonic": "math razor capable expose worth grape metal sunset metal sudden usage scheme",
       "path": "m/44'/60'/0'/0/0"
     },
