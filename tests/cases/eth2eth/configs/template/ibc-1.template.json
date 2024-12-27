@@ -25,7 +25,8 @@
     "blocks_per_event_query": 1000,
     "abi_paths": [
       "fixtures/ethereum/ibc1/abis"
-    ]
+    ],
+    "price_bump": 10
   },
   "prover": {
     "@type": "/relayer.provers.mock.config.ProverConfig",

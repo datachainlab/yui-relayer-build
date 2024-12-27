@@ -418,8 +418,8 @@ github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7Do
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/danieljoos/wincred v1.1.2 h1:QLdCxFs1/Yl4zduvBdcHB8goaYk9RARS2SgLLRuAyr0=
 github.com/danieljoos/wincred v1.1.2/go.mod h1:GijpziifJoIBfYh+S7BbkdUTU4LfM+QnGqR5Vl2tAx0=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.3.13 h1:RbYtraeZwN55qfbzfoDIJPK8CWWx5dWfO8CfnvS+dhk=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.3.13/go.mod h1:dxL5umpjncKRw7iBFE2W+dGpmmWOiggth0aQsJrtLKM=
+github.com/datachainlab/ethereum-ibc-relay-chain v0.3.14 h1:XZdqjXxgg0iBmc90TPx5lIoYTe7NQWeo2M2RZS1rDiU=
+github.com/datachainlab/ethereum-ibc-relay-chain v0.3.14/go.mod h1:rwOM29wMba4Ze1j8fIeHhIsVM/p1tXrf8/qDEntLBCc=
 github.com/datachainlab/ibc-hd-signer v0.1.1 h1:ws90eXVjjLcx2i6iPJu2bJ2w06tIeuSyIBfYbOIEv68=
 github.com/datachainlab/ibc-hd-signer v0.1.1/go.mod h1:I1pas5LB8QupngqT05/h3u1nqhHww9OOnAwliuPEd3c=
 github.com/datachainlab/ibc-mock-client v0.4.2 h1:0BbQFwLUUbKknCsUO6m80VogRbJop5kA0u9/3Hma9n0=
