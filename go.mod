@@ -9,9 +9,9 @@ replace (
 )
 
 require (
-	github.com/datachainlab/ethereum-ibc-relay-chain v0.3.14
-	github.com/datachainlab/ibc-hd-signer v0.1.1
-	github.com/hyperledger-labs/yui-relayer v0.5.10
+	github.com/datachainlab/ethereum-ibc-relay-chain v0.3.16
+	github.com/datachainlab/ibc-hd-signer v0.1.2
+	github.com/hyperledger-labs/yui-relayer v0.5.11
 )
 
 require (
@@ -235,3 +235,5 @@ require (
 	rsc.io/tmplfunc v0.0.3 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
+
+replace github.com/hyperledger-labs/yui-relayer => github.com/abicky/yui-relayer v0.0.0-20250227235826-c4bc26f833cd
