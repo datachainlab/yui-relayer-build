@@ -236,4 +236,7 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-replace github.com/hyperledger-labs/yui-relayer => github.com/abicky/yui-relayer v0.0.0-20250227235826-c4bc26f833cd
+replace (
+	github.com/datachainlab/ethereum-ibc-relay-chain => github.com/datachainlab/ethereum-ibc-relay-chain v0.3.17-0.20250304025722-465584e9eee8
+	github.com/hyperledger-labs/yui-relayer => github.com/abicky/yui-relayer v0.0.0-20250227235826-c4bc26f833cd
+)
