@@ -238,8 +238,8 @@ github.com/VictoriaMetrics/fastcache v1.12.2 h1:N0y9ASrJ0F6h0QaC3o6uJb3NIZ9VKLjC
 github.com/VictoriaMetrics/fastcache v1.12.2/go.mod h1:AmC+Nzz1+3G2eCPapF6UcsnkThDcMsQicp4xDukwJYI=
 github.com/VividCortex/gohistogram v1.0.0 h1:6+hBz+qvs0JOrrNhhmR7lFxo5sINxBCGXrdtl/UvroE=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
-github.com/abicky/yui-relayer v0.0.0-20250227235826-c4bc26f833cd h1:R8WbAWVhQp8eGIQFbv7ZpOYsoljlQQNAeopEZxCvsuw=
-github.com/abicky/yui-relayer v0.0.0-20250227235826-c4bc26f833cd/go.mod h1:kJvSmuagdDsSlvbnHtEHbhmkUlAS43/ArLDwukOKSlo=
+github.com/abicky/yui-relayer v0.0.0-20250328104822-420aec043a7e h1:ljhyTYy/YwRzfgL434JVjOAGlsV6Fxs38sNOr2ViuQA=
+github.com/abicky/yui-relayer v0.0.0-20250328104822-420aec043a7e/go.mod h1:kJvSmuagdDsSlvbnHtEHbhmkUlAS43/ArLDwukOKSlo=
 github.com/adlio/schema v1.3.3 h1:oBJn8I02PyTB466pZO1UZEn1TV5XLlifBSyMrmHl/1I=
 github.com/adlio/schema v1.3.3/go.mod h1:1EsRssiv9/Ce2CMzq5DoL7RiMshhuigQxrR4DMV9fHg=
 github.com/aead/siphash v1.0.1/go.mod h1:Nywa3cDsYNNK3gaciGTWPwHt0wlpNV15vwmswBAUSII=
@@ -420,8 +420,8 @@ github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7Do
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/danieljoos/wincred v1.1.2 h1:QLdCxFs1/Yl4zduvBdcHB8goaYk9RARS2SgLLRuAyr0=
 github.com/danieljoos/wincred v1.1.2/go.mod h1:GijpziifJoIBfYh+S7BbkdUTU4LfM+QnGqR5Vl2tAx0=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.3.17-0.20250304025722-465584e9eee8 h1:1AbGIX2cxYWFg7ALWsgX3I5VyG1b9r4YQug04J6mcdM=
-github.com/datachainlab/ethereum-ibc-relay-chain v0.3.17-0.20250304025722-465584e9eee8/go.mod h1:sf+ti1uM1joxhukxIyj8oDQ5yf7d+e+nl+3vtn9f5CM=
+github.com/datachainlab/ethereum-ibc-relay-chain v0.3.17 h1:oyDLIbc9hyp31c3OoIB5wHm51tpyDrYAu1KBA1KxfEw=
+github.com/datachainlab/ethereum-ibc-relay-chain v0.3.17/go.mod h1:sf+ti1uM1joxhukxIyj8oDQ5yf7d+e+nl+3vtn9f5CM=
 github.com/datachainlab/ibc-hd-signer v0.1.2 h1:fWAYjMBVyM390OllX/l58mZYA7we0spEBFLYKWYTwfw=
 github.com/datachainlab/ibc-hd-signer v0.1.2/go.mod h1:nwH0Z3TK/7jbu/oInGGWGRimQ+LCn6yvDyjMZrw9mR4=
 github.com/datachainlab/ibc-mock-client v0.4.2 h1:0BbQFwLUUbKknCsUO6m80VogRbJop5kA0u9/3Hma9n0=
