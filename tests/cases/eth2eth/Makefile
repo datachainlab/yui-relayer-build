@@ -27,6 +27,15 @@ test-single:
 	./scripts/handshake
 	./scripts/test-channel-upgrade single
 	./scripts/test-tx
+	./scripts/test-timeout
+
+.PHONY: test-ordered
+test-ordered:
+	./scripts/fixture single
+	./scripts/init-rly path-ordered.json
+	./scripts/handshake
+	./scripts/test-tx
+	./scripts/test-timeout
 
 .PHONY: network-down
 network-down:
