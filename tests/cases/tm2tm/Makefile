@@ -13,6 +13,7 @@ test:
 	./scripts/init-rly
 	./scripts/handshake
 	./scripts/test-tx
+	./scripts/test-timeout
 
 .PHONY: network-down
 network-down:
