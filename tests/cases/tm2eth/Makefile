@@ -15,6 +15,7 @@ test:
 	./scripts/test-channel-upgrade
 	./scripts/test-mockapp-packet-relay
 	./scripts/test-ics20-packet-relay
+	./scripts/test-mockapp-packet-timeout
 
 .PHONY: network-down
 network-down:

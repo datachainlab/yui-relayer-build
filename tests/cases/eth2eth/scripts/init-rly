@@ -3,8 +3,8 @@
 set -eu
 
 SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
-source ${SCRIPT_DIR}/util/relayer-util
 PATH_JSON=${1:-path.json}
+source ${SCRIPT_DIR}/util/relayer-util
 
 rm -rf ${RELAYER_CONF} &> /dev/null
 
@@ -14,4 +14,5 @@ ${RLY} config init
 ${RLY} chains add-dir ${CONF_DIR}/chains/
 
 # add a path between chain0 and chain1
-$RLY paths add $CHAINID_ONE $CHAINID_TWO $PATH_NAME --file=${CONF_DIR}/$PATH_JSON
+$RLY paths add $CHAINID_ONE $CHAINID_TWO $PATH_NAME --file=${CONF_DIR}/${PATH_JSON}
+

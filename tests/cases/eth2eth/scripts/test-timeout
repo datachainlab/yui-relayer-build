@@ -41,9 +41,11 @@ cast send \
      $(date -d 1sec +%s%N)
 
 sleep 5
-tmpfile=$0.log
+TMPFILE=$0.log
 waitRelay "sendPacket" "unrelayed-packets" "src"
-${RLY} tx relay ${PATH_NAME} 2>&1 | tee $tmpfile
-grep -e 'core\.(\*RelayMsgs)\.Send' $tmpfile | grep ProofUnreceived
+${RLY} tx relay ${PATH_NAME} 2>&1 | tee $TMPFILE
+if grep -i 'Error' $TMPFILE; then exit 1; fi
+grep -e 'core\.(\*RelayMsgs)\.Send' $TMPFILE | grep ProofUnreceived
+
 
 

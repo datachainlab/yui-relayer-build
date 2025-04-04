@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -eux
+
+TMPFILE=$0.log
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
+
+RELAYER_CONF="$HOME/.yui-relayer"
+RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
+RLY="${RLY_BINARY} --debug"
+
+PATH_NAME=mockapp-path
+
+ADDRESSES_DIR_B="${FIXTURES_DIR}/ethereum/ibc1/addresses"
+MOCKAPP_CONTRACT_B=`cat ${ADDRESSES_DIR_B}/AppV1`
+
+MNEMONIC_B=$($RLY config show | jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.signer.mnemonic')
+RPC_ADDRESS_B=$($RLY config show | jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.rpc_addr')
+PORT_B=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].dst."port-id"')
+CHANNEL_B=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].dst."channel-id"')
+
+TX_INTERVAL=3
+
+echo "!!! ibc0 -> ibc1 !!!"
+TM_ADDRESS=$(${RLY} tendermint keys show ibc0 testkey)
+docker exec tendermint-chain0-mock sh -c "simd --home /root/data/ibc0 tx --keyring-backend=test --from ${TM_ADDRESS} --chain-id ibc0 mockapp send --packet-timeout-height 0-1 mockapp ${CHANNEL_B} 'mock packet data' --yes"
+sleep ${TX_INTERVAL}
+${RLY} tx relay $PATH_NAME 2>&1 | tee $TMPFILE
+sleep ${TX_INTERVAL}
+if grep -i 'Error' $TMPFILE; then exit 1; fi
+grep -e 'core\.(\*RelayMsgs)\.Send' $TMPFILE | grep ProofUnreceived
+
+echo "!!! ibc1 -> ibc0 !!!"
+BOB_INDEX=2
+cast send \
+     --rpc-url $RPC_ADDRESS_B \
+     --mnemonic "$MNEMONIC_B" \
+     --mnemonic-index ${BOB_INDEX} \
+     $MOCKAPP_CONTRACT_B \
+     'sendPacket(bytes,string,string,(uint64,uint64),uint64)' \
+     $(cast from-utf8 'mock packet data') \
+     $PORT_B \
+     $CHANNEL_B \
+     '(0,100000)' \
+     $(date -d 1sec +%s%N)
+sleep ${TX_INTERVAL}
+${RLY} tx relay $PATH_NAME 2>&1 | tee $TMPFILE
+sleep ${TX_INTERVAL}
+if grep -i 'Error' $TMPFILE; then exit 1; fi
+grep -e 'core\.(\*RelayMsgs)\.Send' $TMPFILE | grep ProofUnreceived
