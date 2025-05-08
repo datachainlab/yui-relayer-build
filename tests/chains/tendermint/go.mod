@@ -22,7 +22,7 @@ require (
 	github.com/cosmos/ibc-go/modules/capability v1.0.0
 	github.com/cosmos/ibc-go/v8 v8.2.1
 	github.com/datachainlab/ibc-mock-app v0.1.1
-	github.com/datachainlab/ibc-mock-client v0.4.2
+	github.com/datachainlab/ibc-mock-client v0.4.3
 	github.com/spf13/cast v1.6.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
