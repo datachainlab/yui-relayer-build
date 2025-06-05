@@ -10,6 +10,7 @@ network:
 .PHONY: test
 test:
 	$(MAKE) test-single
+	$(MAKE) test-single-ordered
 	$(MAKE) test-multi
 
 .PHONY: test-multi
@@ -29,8 +30,8 @@ test-single:
 	./scripts/test-tx
 	./scripts/test-timeout
 
-.PHONY: test-ordered
-test-ordered:
+.PHONY: test-single-ordered
+test-single-ordered:
 	./scripts/fixture single
 	./scripts/init-rly path-ordered.json
 	./scripts/handshake

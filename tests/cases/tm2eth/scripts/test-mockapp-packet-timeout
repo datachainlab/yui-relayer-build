@@ -20,7 +20,7 @@ RPC_ADDRESS_B=$($RLY config show | jq -r '.chains[] | select(.chain.chain_id == 
 PORT_B=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].dst."port-id"')
 CHANNEL_B=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].dst."channel-id"')
 
-TX_INTERVAL=3
+TX_INTERVAL=10
 
 echo "!!! ibc0 -> ibc1 !!!"
 TM_ADDRESS=$(${RLY} tendermint keys show ibc0 testkey)
