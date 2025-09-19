@@ -1,5 +1,7 @@
 include ../../docker.mk
 
+export USE_FAKELOST ?= yes
+
 .PHONY: network
 network:
 	TAG=${DOCKER_TAG} $(DOCKER_COMPOSE) \
@@ -15,6 +17,7 @@ test:
 	./scripts/test-channel-upgrade
 	./scripts/test-mockapp-packet-relay
 	./scripts/test-ics20-packet-relay
+	./scripts/test-service
 
 .PHONY: network-down
 network-down:

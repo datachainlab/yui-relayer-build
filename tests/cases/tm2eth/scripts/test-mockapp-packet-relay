@@ -3,11 +3,18 @@
 set -eux
 
 SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+source ${SCRIPT_DIR}/utils
 FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
 
 RELAYER_CONF="$HOME/.yui-relayer"
 RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
 RLY="${RLY_BINARY} --debug"
+
+if [ "USE_FAKELOST-$USE_FAKELOST" = "USE_FAKELOST-yes" ]; then
+  export DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_CHAIN_ibc1="10"
+  export DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_PROVER_ibc1="10"
+  export DEBUG_RELAYER_SHFU_WAIT_ibc0="20"
+fi
 
 PATH_NAME=mockapp-path
 
@@ -31,18 +38,9 @@ ${RLY} tx acks $PATH_NAME --dst-seqs 1
 sleep ${TX_INTERVAL}
 
 echo "!!! ibc1 -> ibc0 !!!"
-BOB_INDEX=2
-cast send \
-     --rpc-url $RPC_ADDRESS_B \
-     --mnemonic "$MNEMONIC_B" \
-     --mnemonic-index ${BOB_INDEX} \
-     $MOCKAPP_CONTRACT_B \
-     'sendPacket(bytes,string,string,(uint64,uint64),uint64)' \
-     $(cast from-utf8 'mock packet data') \
-     $PORT_B \
-     $CHANNEL_B \
-     '(0,100000)' \
-     $(date -d 1hour +%s%N)
+TX_INTERVAL=20
+sendPacketToEth $PATH_NAME
+
 sleep ${TX_INTERVAL}
 ${RLY} tx relay $PATH_NAME --dst-seqs 1
 sleep ${TX_INTERVAL}
