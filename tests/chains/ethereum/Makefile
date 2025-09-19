@@ -33,3 +33,6 @@ down-scaffold:
 docker-commit:
 	$(SCRIPT_DIR)/docker/commitImage.sh  $(DOCKER_REPO) $(DOCKER_TAG) ethereum-geth0 ethereum-geth0-scaffold $(CHAIN_ID0)
 	$(SCRIPT_DIR)/docker/commitImage.sh  $(DOCKER_REPO) $(DOCKER_TAG) ethereum-geth1 ethereum-geth1-scaffold $(CHAIN_ID1)
+
+clean:
+	rm -rf contracts/addresses contracts/artifacts contracts/cache contracts/.openzeppelin
