@@ -28,7 +28,10 @@
     "price_bump": 10
   },
   "prover": {
-    "@type": "/relayer.provers.mock.config.ProverConfig",
-    "finality_delay": 0
+    "@type": "/relayer.provers.debug.config.ProverConfig",
+    "origin_prover": {
+      "@type": "/relayer.provers.mock.config.ProverConfig",
+      "finality_delay": 0
+    }
   }
 }
