@@ -5,6 +5,7 @@ go 1.22.0
 replace (
 	// https://github.com/cosmos/cosmos-sdk/blob/v0.47.3/go.mod#L171-L182
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
+	github.com/hyperledger-labs/yui-relayer v0.5.16 => github.com/hyperledger-labs/yui-relayer v0.5.18-0.20250916103708-f2e9f3c82be9
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 )
 
