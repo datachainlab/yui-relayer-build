@@ -39,7 +39,7 @@ sleep ${TX_INTERVAL}
 
 echo "!!! ibc1 -> ibc0 !!!"
 TX_INTERVAL=20
-sendPacketToEth $PATH_NAME
+sendPacketOnEth $PATH_NAME
 
 sleep ${TX_INTERVAL}
 ${RLY} tx relay $PATH_NAME --dst-seqs 1

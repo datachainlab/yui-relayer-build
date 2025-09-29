@@ -29,7 +29,7 @@ expectUnrelayedCount $PATH_NAME "unrelayed-packets" "dst" 0
 expectUnrelayedCount $PATH_NAME "unrelayed-acknowledgements" "src" 0
 expectUnrelayedCount $PATH_NAME "unrelayed-acknowledgements" "dst" 0
 
-sendPacketToEth $PATH_NAME
+sendPacketOnEth $PATH_NAME
 waitUnrelayedCount $PATH_NAME "unrelayed-packets" "dst" 1 300
 
 docker exec tendermint-chain0-mock sh -c "simd --home /root/data/ibc0 tx --keyring-backend=test --from ${TM_ADDRESS0} --chain-id ibc0 mockapp send mockapp channel-0 'mock packet data' --yes"
