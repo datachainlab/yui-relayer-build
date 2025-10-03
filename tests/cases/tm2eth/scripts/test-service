@@ -16,7 +16,6 @@ RLY_BIN=${SCRIPT_DIR}/../../../../build/yrly
 RLY="${RLY_BIN} --debug"
 
 if [ "USE_FAKELOST-$USE_FAKELOST" = "USE_FAKELOST-yes" ]; then
-    export DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_CHAIN_ibc1="10"
     export DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_PROVER_ibc1="10"
     export DEBUG_RELAYER_SHFU_WAIT_ibc0="20"
 fi
@@ -50,6 +49,6 @@ waitUnrelayedCount $PATH_NAME "unrelayed-acknowledgements" "dst" 0 300
 echo "Waiting src->dst ack is relayed"
 waitUnrelayedCount $PATH_NAME "unrelayed-acknowledgements" "src" 0 300
 
-echo "Finished"
+echo "$0 Finished"
 
 kill $RLY_PID
