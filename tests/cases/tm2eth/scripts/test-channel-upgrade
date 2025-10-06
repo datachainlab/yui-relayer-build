@@ -12,6 +12,7 @@ RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
 RLY="${RLY_BINARY} --debug"
 
 if [ "USE_FAKELOST-$USE_FAKELOST" = "USE_FAKELOST-yes" ]; then
+  export DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_CHAIN_ibc1="10"
   export DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_PROVER_ibc1="10"
   export DEBUG_RELAYER_SHFU_WAIT_ibc0="20"
 fi
@@ -104,7 +105,7 @@ checkResult() {
     fi
 
     # confirm dst chain is not upgrading
-    upg=$($RLY query channel-upgrade $PATH_NAME ibc1)
+    upg=$(env -u DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_CHAIN_ibc1 $RLY query channel-upgrade $PATH_NAME ibc1)
     if [ $(echo "$upg" | jq '.fields|length') -ne 0 ]
     then
 	echo "dst chain is still in the process of upgrade: $upg"
