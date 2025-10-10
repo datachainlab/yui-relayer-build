@@ -105,7 +105,7 @@ checkResult() {
     fi
 
     # confirm dst chain is not upgrading
-    upg=$(env -u DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_CHAIN_ibc1 $RLY query channel-upgrade $PATH_NAME ibc1)
+    upg=$($RLY query channel-upgrade $PATH_NAME ibc1)
     if [ $(echo "$upg" | jq '.fields|length') -ne 0 ]
     then
 	echo "dst chain is still in the process of upgrade: $upg"
