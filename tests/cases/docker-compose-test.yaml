@@ -39,13 +39,15 @@ services:
     container_name: tendermint-chain0-mock
     environment:
       USE_MOCK_CLIENT: 1
-      IBC_CHANNEL_UPGRADE_TIMEOUT:   30000000000
+      IBC_CHANNEL_UPGRADE_TIMEOUT: 480000000000 #480 sec
+      #IBC_CHANNEL_UPGRADE_TIMEOUT:   30000000000
   tendermint-chain1-mock:
     <<: *tendermint-chain1
     container_name: tendermint-chain1-mock
     environment:
       USE_MOCK_CLIENT: 1
-      IBC_CHANNEL_UPGRADE_TIMEOUT:   30000000000
+      IBC_CHANNEL_UPGRADE_TIMEOUT: 480000000000 #480 sec
+      #IBC_CHANNEL_UPGRADE_TIMEOUT:   30000000000
 
 # Ethereum
   ethereum-geth0:
