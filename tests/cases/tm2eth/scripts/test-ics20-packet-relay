@@ -9,6 +9,12 @@ RELAYER_CONF="$HOME/.yui-relayer"
 RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
 RLY="${RLY_BINARY} --debug"
 
+if [ "USE_FAKELOST-$USE_FAKELOST" = "USE_FAKELOST-yes" ]; then
+  export DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_CHAIN_ibc1="10"
+  export DEBUG_RELAYER_PRUNE_AFTER_BLOCKS_PROVER_ibc1="10"
+  export DEBUG_RELAYER_SHFU_WAIT_ibc0="20"
+fi
+
 PATH_NAME=ics20-path
 
 TM_ADDRESS=$(${RLY} tendermint keys show ibc0 testkey)
@@ -19,8 +25,8 @@ ADDRESSES_DIR_B="${FIXTURES_DIR}/ethereum/ibc1/addresses"
 ERC20_TOKEN_CONTRACT_B=`cat ${ADDRESSES_DIR_B}/ERC20Token`
 ICS20_TRANSFER_CONTRACT_B=`cat ${ADDRESSES_DIR_B}/ICS20Transfer`
 
-MNEMONIC_B=$($RLY config show | jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.signer.mnemonic')
-RPC_ADDRESS_B=$($RLY config show | jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.rpc_addr')
+MNEMONIC_B=$($RLY config show | jq -r '.chains[] | select(.chain.origin_chain.chain_id == "ibc1").chain.origin_chain.signer.mnemonic')
+RPC_ADDRESS_B=$($RLY config show | jq -r '.chains[] | select(.chain.origin_chain.chain_id == "ibc1").chain.origin_chain.rpc_addr')
 PORT_A=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].src."port-id"')
 PORT_B=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].dst."port-id"')
 CHANNEL_A=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].src."channel-id"')

@@ -23,4 +23,4 @@ ${DOCKER} cp ethereum-geth0:/root/addresses ${FIXTURES_DIR}/ethereum/ibc1/addres
 
 # assign the contract address to ChainConfig
 IBC_HANDLER_ADDRESS=`cat ${FIXTURES_DIR}/ethereum/ibc1/addresses/IBCHandler`
-jq ".chain.ibc_address |= \"$IBC_HANDLER_ADDRESS\"" < "$CONF_DIR/template/ibc-1.template.json" > "$CONF_DIR/demo/ibc-1.json"
+jq ".chain.origin_chain.ibc_address |= \"$IBC_HANDLER_ADDRESS\"" < "$CONF_DIR/template/ibc-1.template.json" > "$CONF_DIR/demo/ibc-1.json"

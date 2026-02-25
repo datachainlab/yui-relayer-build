@@ -1,34 +1,40 @@
 {
   "chain": {
-    "@type": "/relayer.chains.ethereum.config.ChainConfig",
-    "chain_id": "ibc1",
-    "eth_chain_id": 2018,
-    "rpc_addr": "http://localhost:8645",
-    "signer": {
-      "@type": "/relayer.signers.hd.SignerConfig",
-      "mnemonic": "math razor capable expose worth grape metal sunset metal sudden usage scheme",
-      "path": "m/44'/60'/0'/0/0"
-    },
-    "ibc_address": "PLACE_HOLDER",
-    "initial_send_checkpoint": 1,
-    "initial_recv_checkpoint": 1,
-    "enable_debug_trace": true,
-    "average_block_time_msec": 1000,
-    "max_retry_for_inclusion": 5,
-    "gas_estimate_rate": {
-      "numerator": 3,
-      "denominator": 2
-    },
-    "max_gas_limit": 10000000,
-    "tx_type": "auto",
-    "blocks_per_event_query": 1000,
-    "abi_paths": [
-      "fixtures/ethereum/ibc1/abis"
-    ],
-    "price_bump": 10
+    "@type": "/relayer.chains.debug.config.ChainConfig",
+    "origin_chain": {
+      "@type": "/relayer.chains.ethereum.config.ChainConfig",
+      "chain_id": "ibc1",
+      "eth_chain_id": 2018,
+      "rpc_addr": "http://localhost:8645",
+      "signer": {
+        "@type": "/relayer.signers.hd.SignerConfig",
+        "mnemonic": "math razor capable expose worth grape metal sunset metal sudden usage scheme",
+        "path": "m/44'/60'/0'/0/0"
+      },
+      "ibc_address": "PLACE_HOLDER",
+      "initial_send_checkpoint": 1,
+      "initial_recv_checkpoint": 1,
+      "enable_debug_trace": true,
+      "average_block_time_msec": 1000,
+      "max_retry_for_inclusion": 5,
+      "gas_estimate_rate": {
+        "numerator": 3,
+        "denominator": 2
+      },
+      "max_gas_limit": 10000000,
+      "tx_type": "auto",
+      "blocks_per_event_query": 1000,
+      "abi_paths": [
+        "fixtures/ethereum/ibc1/abis"
+      ],
+      "price_bump": 10
+    }
   },
   "prover": {
-    "@type": "/relayer.provers.mock.config.ProverConfig",
-    "finality_delay": 0
+    "@type": "/relayer.provers.debug.config.ProverConfig",
+    "origin_prover": {
+      "@type": "/relayer.provers.mock.config.ProverConfig",
+      "finality_delay": 0
+    }
   }
 }
