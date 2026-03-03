@@ -15,8 +15,8 @@ PATH_NAME=mockapp-path
 ADDRESSES_DIR_B="${FIXTURES_DIR}/ethereum/ibc1/addresses"
 MOCKAPP_CONTRACT_B=`cat ${ADDRESSES_DIR_B}/AppV1`
 
-MNEMONIC_B=$($RLY config show | jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.signer.mnemonic')
-RPC_ADDRESS_B=$($RLY config show | jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.rpc_addr')
+MNEMONIC_B=$($RLY config show | jq -r '.chains[] | select(.chain.origin_chain.chain_id == "ibc1").chain.origin_chain.signer.mnemonic')
+RPC_ADDRESS_B=$($RLY config show | jq -r '.chains[] | select(.chain.origin_chain.chain_id == "ibc1").chain.origin_chain.rpc_addr')
 PORT_B=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].dst."port-id"')
 CHANNEL_B=$($RLY paths list --json | jq -r --arg path $PATH_NAME '.[$path].dst."channel-id"')
 
