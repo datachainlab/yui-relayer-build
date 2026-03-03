@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -eux
+
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+FIXTURES_DIR=${SCRIPT_DIR}/../fixtures
+
+source ${SCRIPT_DIR}/util/relayer-util
+
+ADDRESSES_DIR_A="${FIXTURES_DIR}/ethereum/ibc0/addresses"
+ADDRESSES_DIR_B="${FIXTURES_DIR}/ethereum/ibc1/addresses"
+MOCKAPP_A=`cat ${ADDRESSES_DIR_A}/AppV1`
+MOCKAPP_B=`cat ${ADDRESSES_DIR_B}/AppV1`
+
+CONFIG_JSON=${RELAYER_CONF}/config/config.json
+
+MNEMONIC_A=$(jq -r '.chains[] | select(.chain.chain_id == "ibc0").chain.signer.mnemonic' ${CONFIG_JSON})
+MNEMONIC_B=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.signer.mnemonic' ${CONFIG_JSON})
+
+RPC_ADDRESS_A=$(jq -r '.chains[] | select(.chain.chain_id == "ibc0").chain.rpc_addr' ${CONFIG_JSON})
+RPC_ADDRESS_B=$(jq -r '.chains[] | select(.chain.chain_id == "ibc1").chain.rpc_addr' ${CONFIG_JSON})
+
+PORT_A=$(jq -r '.paths.ibc01.src."port-id"' ${CONFIG_JSON})
+PORT_B=$(jq -r '.paths.ibc01.dst."port-id"' ${CONFIG_JSON})
+CHANNEL_A=$(jq -r '.paths.ibc01.src."channel-id"' ${CONFIG_JSON})
+CHANNEL_B=$(jq -r '.paths.ibc01.dst."channel-id"' ${CONFIG_JSON})
+
+# send a packet from ibc0 to ibc1
+echo "!!! ibc0 alice -> ibc1 bob !!!"
+ALICE_INDEX=1
+cast send \
+     --rpc-url $RPC_ADDRESS_A \
+     --mnemonic "$MNEMONIC_A" \
+     --mnemonic-index ${ALICE_INDEX} \
+     $MOCKAPP_A \
+     'sendPacket(bytes,string,string,(uint64,uint64),uint64)' \
+     $(cast from-utf8 'mock packet data') \
+     $PORT_A \
+     $CHANNEL_A \
+     '(0,100000)' \
+     $(date -d 1sec +%s%N)
+
+sleep 5
+TMPFILE=$0.log
+waitRelay "sendPacket" "unrelayed-packets" "src"
+${RLY} tx relay ${PATH_NAME} 2>&1 | tee $TMPFILE
+if grep -i 'Error' $TMPFILE; then exit 1; fi
+grep -e 'core\.(\*RelayMsgs)\.Send' $TMPFILE | grep ProofUnreceived
+
+
+
