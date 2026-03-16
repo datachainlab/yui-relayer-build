@@ -5,15 +5,13 @@ go 1.23.0
 replace (
 	// https://github.com/cosmos/cosmos-sdk/blob/v0.47.3/go.mod#L171-L182
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
-	github.com/datachainlab/ethereum-ibc-relay-chain v0.3.18 => github.com/dai1975/ethereum-ibc-relay-chain v0.0.0-20260303053719-87e59874797a
-	github.com/hyperledger-labs/yui-relayer v0.5.19 => github.com/dai1975/yui-relayer v0.0.0-20260220065323-5db6da8a10dc
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 )
 
 require (
-	github.com/datachainlab/ethereum-ibc-relay-chain v0.3.18
+	github.com/datachainlab/ethereum-ibc-relay-chain v0.3.21
 	github.com/datachainlab/ibc-hd-signer v0.1.3
-	github.com/hyperledger-labs/yui-relayer v0.5.19
+	github.com/hyperledger-labs/yui-relayer v0.5.20
 )
 
 require (
