@@ -1,6 +1,6 @@
 module github.com/datachainlab/yui-relayer-build
 
-go 1.22.0
+go 1.23.0
 
 replace (
 	// https://github.com/cosmos/cosmos-sdk/blob/v0.47.3/go.mod#L171-L182
@@ -9,9 +9,9 @@ replace (
 )
 
 require (
-	github.com/datachainlab/ethereum-ibc-relay-chain v0.3.18
+	github.com/datachainlab/ethereum-ibc-relay-chain v0.3.21
 	github.com/datachainlab/ibc-hd-signer v0.1.3
-	github.com/hyperledger-labs/yui-relayer v0.5.19
+	github.com/hyperledger-labs/yui-relayer v0.5.20
 )
 
 require (
@@ -77,7 +77,7 @@ require (
 	github.com/crate-crypto/go-ipa v0.0.0-20240223125850-b1e8a79f509c // indirect
 	github.com/crate-crypto/go-kzg-4844 v1.0.0 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
-	github.com/datachainlab/ibc-mock-client v0.4.2 // indirect
+	github.com/datachainlab/ibc-mock-client v0.4.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
@@ -229,7 +229,7 @@ require (
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/oauth2 v0.26.0 // indirect
-	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/term v0.29.0 // indirect
 	golang.org/x/text v0.22.0 // indirect

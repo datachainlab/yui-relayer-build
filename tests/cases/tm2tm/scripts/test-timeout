@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -eux
+
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+APP=$1
+RLY_BINARY=${SCRIPT_DIR}/../../../../build/yrly
+RLY="${RLY_BINARY} --debug"
+
+# XXX set proper value
+TX_INTERVAL=3
+
+TM_ADDRESS0=$(${RLY} tendermint keys show ibc0 testkey)
+TM_ADDRESS1=$(${RLY} tendermint keys show ibc1 testkey)
+
+echo "!!! ibc0 -> ibc1 !!!"
+
+echo "Before ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS0})"
+echo "Before ibc1 balance: $(${RLY} query balance ibc1 ${TM_ADDRESS1})"
+
+PATH_NAME=ibc01
+if [[ $APP = "transfer" ]]; then
+  ${RLY} tx transfer --timeout-height-offset 1 ibc01 ibc0 ibc1 100samoleans ${TM_ADDRESS1}
+else
+  CHANNEL_NAME=$(${RLY} query channel ${PATH_NAME} ibc0 | jq -r '.counterparty.channelId')
+  docker exec tendermint-chain0 sh -c "simd --home /root/data/ibc0 tx --keyring-backend=test --from ${TM_ADDRESS0} --chain-id ibc0 mockapp send --packet-timeout-height 0-1 mockapp ${CHANNEL_NAME} 'mock packet data' --yes"
+fi
+sleep ${TX_INTERVAL}
+
+TMPFILE=$0.log
+${RLY} tx relay ibc01 2>&1 | tee $TMPFILE
+sleep ${TX_INTERVAL}
+
+if grep -i 'Error' $TMPFILE; then exit 1; fi
+grep -e 'core\.(\*RelayMsgs)\.Send' $TMPFILE | grep ProofUnreceived
+
+echo "After ibc0 balance: $(${RLY} query balance ibc0 ${TM_ADDRESS0})"
+echo "After ibc1 balance: $(${RLY} query balance ibc1 ${TM_ADDRESS1})"
+
+

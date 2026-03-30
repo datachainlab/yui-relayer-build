@@ -10,6 +10,7 @@ network:
 .PHONY: test
 test:
 	$(MAKE) test-single
+	$(MAKE) test-single-ordered
 	$(MAKE) test-multi
 
 .PHONY: test-multi
@@ -19,6 +20,7 @@ test-multi:
 	./scripts/handshake
 	./scripts/test-channel-upgrade multi
 	./scripts/test-tx
+	./scripts/test-timeout
 
 .PHONY: test-single
 test-single:
@@ -27,6 +29,14 @@ test-single:
 	./scripts/handshake
 	./scripts/test-channel-upgrade single
 	./scripts/test-tx
+
+.PHONY: test-single-ordered
+test-single-ordered:
+	./scripts/fixture single
+	./scripts/init-rly path-ordered.json
+	./scripts/handshake
+	./scripts/test-tx
+	./scripts/test-timeout
 
 .PHONY: network-down
 network-down:
